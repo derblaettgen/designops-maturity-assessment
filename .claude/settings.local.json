@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \"import json,sys; json.load\\(open\\('c:/Projects/designops-maturity-assessment-/survey/survey.config.json'\\)\\); print\\('VALID JSON'\\)\")",
+      "Bash(node -e \"const fs=require\\('fs'\\); try { JSON.parse\\(fs.readFileSync\\('c:/Projects/designops-maturity-assessment-/survey/survey.config.json','utf8'\\)\\); console.log\\('VALID JSON'\\); } catch\\(e\\) { console.error\\('INVALID:', e.message\\); }\")",
+      "Bash(node -e ':*)",
+      "Bash(node -e \"const fs=require\\('fs'\\); try { const c=JSON.parse\\(fs.readFileSync\\('c:/Projects/designops-maturity-assessment-/survey/survey.config.json','utf8'\\)\\); console.log\\('VALID JSON'\\); console.log\\('Steps:', c.steps.length\\); console.log\\('Dimensions:', c.dimensions.length\\); console.log\\('Waste fractions:', c.wasteFractions.length\\); } catch\\(e\\) { console.error\\('INVALID:', e.message\\); }\")",
+      "Bash(grep -n \"^export\" c:/Projects/designops-maturity-assessment-/survey/js/*.js)",
+      "Bash(grep -n \"^import\" c:/Projects/designops-maturity-assessment-/survey/js/*.js)",
+      "Bash(grep -n \"\\\\bvar\\\\b\" c:/Projects/designops-maturity-assessment-/survey/js/*.js)",
+      "Bash(wc -l c:/Projects/designops-maturity-assessment-/survey/index.html c:/Projects/designops-maturity-assessment-/survey/survey.config.json c:/Projects/designops-maturity-assessment-/survey/css/*.css c:/Projects/designops-maturity-assessment-/survey/js/*.js)",
+      "Bash(mv survey/assets assets)",
+      "Bash(rmdir survey:*)",
+      "Bash(npx skills:*)"
+    ]
+  }
+}

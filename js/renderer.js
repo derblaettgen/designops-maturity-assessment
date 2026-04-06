@@ -28,9 +28,9 @@ async function bootstrap() {
 
 bootstrap().catch(error => {
   document.getElementById('main').innerHTML =
-    `<p style="padding:48px 24px;color:#DC2626;font-weight:600">
+    `<p style="padding:48px 24px;color:#E53E3E;font-weight:600">
       Fehler beim Laden der Konfiguration.<br>
-      <small style="font-weight:400;color:#6B7280">${error.message}</small>
+      <small style="font-weight:400;color:#718096">${error.message}</small>
     </p>`;
   console.error('[survey] bootstrap error:', error);
 });

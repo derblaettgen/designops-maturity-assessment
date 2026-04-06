@@ -297,8 +297,8 @@ function initRadarChart(dimensionScores) {
         {
           label:           'Marktdurchschnitt',
           data:            dimensionScores.map(dimension => benchmark.marketAvg[dimension.key]),
-          backgroundColor: 'rgba(156,163,175,.08)',
-          borderColor:     '#9CA3AF',
+          backgroundColor: 'rgba(160,174,192,.08)',
+          borderColor:     '#A0AEC0',
           borderWidth:     1,
           borderDash:      [4, 4],
           pointRadius:     0
@@ -320,14 +320,14 @@ function initRadarChart(dimensionScores) {
       scales: {
         r: {
           min: 0, max: 5,
-          ticks:       { stepSize: 1, color: '#6B7280', backdropColor: 'transparent', font: { size: 10 } },
-          grid:        { color: 'rgba(209,213,219,.4)' },
-          angleLines:  { color: 'rgba(209,213,219,.3)' },
-          pointLabels: { color: '#374151', font: { size: 11, weight: '600' } }
+          ticks:       { stepSize: 1, color: '#718096', backdropColor: 'transparent', font: { size: 10 } },
+          grid:        { color: 'rgba(203,213,224,.4)' },
+          angleLines:  { color: 'rgba(203,213,224,.3)' },
+          pointLabels: { color: '#4A5568', font: { size: 11, weight: '600' } }
         }
       },
       plugins: {
-        legend: { labels: { color: '#374151', padding: 14, usePointStyle: true }, position: 'bottom' }
+        legend: { labels: { color: '#4A5568', padding: 14, usePointStyle: true }, position: 'bottom' }
       }
     }
   });
@@ -356,17 +356,17 @@ function initWasteLevelsChart({ designerRate, developerRate, pmRate, designerCou
         label:           'Verschwendung / Jahr',
         data:            wasteByLevel,
         backgroundColor: ['#FECACA', '#FDE68A', '#FDE68A', '#BBF7D0', '#BFDBFE'],
-        borderColor:     ['#DC2626', '#D97706', '#D97706', '#16A34A', '#2563EB'],
+        borderColor:     ['#E53E3E', '#D97706', '#D97706', '#16A34A', '#2563EB'],
         borderWidth:     2,
-        borderRadius:    6
+        borderRadius:    8
       }]
     },
     options: {
       responsive: true,
       indexAxis: 'y',
       scales: {
-        x: { ticks: { color: '#6B7280', callback: value => formatCompact(value) }, grid: { color: 'rgba(209,213,219,.2)' } },
-        y: { ticks: { color: '#374151', font: { weight: '600' } }, grid: { display: false } }
+        x: { ticks: { color: '#718096', callback: value => formatCompact(value) }, grid: { color: 'rgba(203,213,224,.2)' } },
+        y: { ticks: { color: '#4A5568', font: { weight: '600' } }, grid: { display: false } }
       },
       plugins: {
         legend:  { display: false },
@@ -400,8 +400,8 @@ function initROIChart(annualSaving) {
         {
           label:           'Kum. Investment',
           data:            cumulativeInvestment,
-          borderColor:     '#DC2626',
-          backgroundColor: 'rgba(220,38,38,.07)',
+          borderColor:     '#E53E3E',
+          backgroundColor: 'rgba(229,62,62,.07)',
           fill: true, tension: .3, borderWidth: 2
         },
         {
@@ -417,7 +417,7 @@ function initROIChart(annualSaving) {
           borderColor:          '#004C93',
           borderWidth:          3,
           tension:              .3,
-          pointBackgroundColor: cumulativeNetROI.map(value => value >= 0 ? '#16A34A' : '#DC2626'),
+          pointBackgroundColor: cumulativeNetROI.map(value => value >= 0 ? '#16A34A' : '#E53E3E'),
           pointRadius:          5
         }
       ]
@@ -425,11 +425,11 @@ function initROIChart(annualSaving) {
     options: {
       responsive: true,
       scales: {
-        y: { ticks: { color: '#6B7280', callback: value => formatCompact(value) }, grid: { color: 'rgba(209,213,219,.2)' } },
-        x: { ticks: { color: '#374151', font: { weight: '600' } }, grid: { display: false } }
+        y: { ticks: { color: '#718096', callback: value => formatCompact(value) }, grid: { color: 'rgba(203,213,224,.2)' } },
+        x: { ticks: { color: '#4A5568', font: { weight: '600' } }, grid: { display: false } }
       },
       plugins: {
-        legend:  { labels: { color: '#374151', usePointStyle: true }, position: 'bottom' },
+        legend:  { labels: { color: '#4A5568', usePointStyle: true }, position: 'bottom' },
         tooltip: { callbacks: { label: tooltipItem => tooltipItem.dataset.label + ': ' + formatNumber(Math.round(tooltipItem.raw)) + ' €' } }
       }
     }
