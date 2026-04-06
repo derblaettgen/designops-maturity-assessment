@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+  <title>DesignOps Reifegrad-Studie 2026 | adesso</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-logo">adesso</div>
+  <div><a href="https://www.adesso.de" target="_blank">adesso.de</a></div>
+</div>
+
+<div class="hero" id="heroSection">
+  <div class="hero-inner">
+    <div class="hero-badge">📊 Feldstudie 2026</div>
+    <h1>DesignOps Reifegrad-Studie:<br><span>Status quo in der DACH-Region</span></h1>
+    <p>Wie professionell organisieren Unternehmen ihre Design-Teams? Diese branchenübergreifende Studie erhebt den DesignOps-Reifegrad – inklusive Benchmark-Vergleich und ROI-Analyse.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="val">~12</div><div class="lbl">Minuten</div></div>
+      <div class="hero-stat"><div class="val">9</div><div class="lbl">Abschnitte</div></div>
+      <div class="hero-stat"><div class="val">100%</div><div class="lbl">Anonym</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="progress-bar" id="progBar">
+  <div class="progress-inner">
+    <div class="prog-row">
+      <span class="prog-section" id="progLabel">Abschnitt 1</span>
+      <div class="prog-meta">
+        <span id="progAnswered">0 beantwortet</span>
+        <span class="prog-sep">·</span>
+        <span id="progTime">~12 Min.</span>
+      </div>
+    </div>
+    <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+    <div class="prog-dots" id="progDots"></div>
+  </div>
+</div>
+
+<div class="container" id="main"></div>
+<div class="dashboard" id="dashboard"></div>
+
+<div class="footer">
+  <div class="footer-logo">adesso</div>
+  DesignOps Reifegrad-Studie 2026 · adesso SE · Adessoplatz 1 · 44269 Dortmund<br>
+  <a href="https://www.adesso.de/de/datenschutz/index-4.jsp" target="_blank">Datenschutz</a> ·
+  <a href="https://www.adesso.de/de/impressum/index.jsp" target="_blank">Impressum</a>
+</div>
+
+<script type="module" src="js/renderer.js"></script>
+</body>
+</html>
