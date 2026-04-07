@@ -7,16 +7,18 @@ interface RoiHighlightProps {
   costs: Costs;
 }
 
-export function RoiHighlight({ annualSaving, costs }: RoiHighlightProps) {
-  const averageRate = Math.round((costs.designerRate + costs.developerRate + costs.pmRate) / 3);
+function averageHourlyRate(costs: Costs): number {
+  return Math.round((costs.designerRate + costs.developerRate + costs.pmRate) / 3);
+}
 
+export function RoiHighlight({ annualSaving, costs }: RoiHighlightProps) {
   return (
     <div className="roi-highlight">
       <div className="sub">💰 Jährliches Einsparpotenzial bei Reifegrad 4.0</div>
       <div className="big">{formatCompact(annualSaving)}</div>
       <div className="sub">
         Basierend auf {costs.designerCount} Designer:innen, {costs.developerCount} Developers,{' '}
-        {costs.pmCount} PMs · Stundensätze: Ø {averageRate} €
+        {costs.pmCount} PMs · Stundensätze: Ø {averageHourlyRate(costs)} €
       </div>
     </div>
   );

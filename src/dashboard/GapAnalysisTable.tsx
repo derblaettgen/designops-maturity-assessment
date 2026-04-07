@@ -1,15 +1,22 @@
-import type { DimensionWithScore } from '../lib/scoring';
+import { getDimensionGaps, type DimensionWithScore } from '../lib/scoring';
 import { gapPriorityInfo, maturityLevelKey } from '../lib/maturity';
+import { formatScore } from '../lib/format';
 import './GapAnalysisTable.css';
 
 interface GapAnalysisTableProps {
   dimensionScores: DimensionWithScore[];
 }
 
+const GAP_PRIORITY_ICONS: Record<string, string> = {
+  'Kritisch': '🔴',
+  'Hoch':     '🟠',
+  'Mittel':   '🟡',
+  'Niedrig':  '🟢',
+  'Gut':      '✅',
+};
+
 export function GapAnalysisTable({ dimensionScores }: GapAnalysisTableProps) {
-  const sortedByGap = [...dimensionScores]
-    .map(dimension => ({ ...dimension, gapToTop: dimension.topPerformer - dimension.score }))
-    .sort((a, b) => b.gapToTop - a.gapToTop);
+  const dimensionGaps = getDimensionGaps(dimensionScores);
 
   return (
     <div className="dash-card dash-card--spaced">
@@ -26,23 +33,24 @@ export function GapAnalysisTable({ dimensionScores }: GapAnalysisTableProps) {
           </tr>
         </thead>
         <tbody>
-          {sortedByGap.map((gap, position) => {
+          {dimensionGaps.map((gap, position) => {
             const priority = gapPriorityInfo(gap.gapToTop);
+            const icon = GAP_PRIORITY_ICONS[priority.label];
             return (
               <tr key={gap.key}>
                 <td className="gap-pos">{position + 1}</td>
-                <td className="gap-name">
-                  <strong>{gap.name}</strong>
-                </td>
+                <td className="gap-name"><strong>{gap.name}</strong></td>
                 <td className="gap-score" data-level={maturityLevelKey(gap.score)}>
-                  {gap.score.toFixed(1)}
+                  {formatScore(gap.score)}
                 </td>
-                <td className="gap-top">{gap.topPerformer.toFixed(1)}</td>
+                <td className="gap-top">{formatScore(gap.topPerformer)}</td>
                 <td className="gap-delta">
-                  {gap.gapToTop > 0 ? `-${gap.gapToTop.toFixed(1)}` : '✅'}
+                  {gap.gapToTop > 0 ? `-${formatScore(gap.gapToTop)}` : '✅'}
                 </td>
                 <td>
-                  <span className={`badge ${priority.cssClass}`}>{priority.label}</span>
+                  <span className={`badge ${priority.badgeClass}`}>
+                    {icon} {priority.label}
+                  </span>
                 </td>
               </tr>
             );

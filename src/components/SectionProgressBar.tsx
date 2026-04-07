@@ -1,5 +1,6 @@
 import type { Section } from '../types/survey';
 import { useSurveyStore } from '../store/useSurveyStore';
+import { isAnswered } from '../lib/scoring';
 import './SectionProgressBar.css';
 
 interface SectionProgressBarProps {
@@ -7,13 +8,15 @@ interface SectionProgressBarProps {
 }
 
 export function SectionProgressBar({ section }: SectionProgressBarProps) {
-  const answers = useSurveyStore(state => state.answers);
-
   const likertQuestions = section.questions.filter(question => question.type === 'likert');
-  if (!likertQuestions.length) return null;
 
-  const answeredCount = likertQuestions.filter(question => answers[question.id]).length;
-  const percentComplete = Math.round((answeredCount / likertQuestions.length) * 100);
+  const percentComplete = useSurveyStore(state => {
+    if (!likertQuestions.length) return 0;
+    const answeredCount = likertQuestions.filter(question => isAnswered(state.answers[question.id])).length;
+    return Math.round((answeredCount / likertQuestions.length) * 100);
+  });
+
+  if (!likertQuestions.length) return null;
 
   return (
     <div className="cb">

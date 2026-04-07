@@ -1,6 +1,7 @@
 import type { AnswerValue, CostDefaults, SurveyConfig } from '../types/survey';
 import type { DimensionWithScore } from './scoring';
 import { getAllDimensions } from './scoring';
+import { LIKERT_MAX, LIKERT_MIN, LIKERT_SCALE, TARGET_MATURITY_LEVEL } from './constants';
 
 export interface Costs {
   designerRate: number;
@@ -12,7 +13,13 @@ export interface Costs {
   hoursPerYear: number;
 }
 
-function pickNumber(value: AnswerValue | undefined, fallback: number): number {
+export type CostKey = keyof CostDefaults;
+
+export function costAnswerKey(field: CostKey): string {
+  return `cost_${field}`;
+}
+
+export function pickNumber(value: AnswerValue | undefined, fallback: number): number {
   if (typeof value === 'number') return value;
   if (typeof value === 'string' && value !== '' && !Number.isNaN(Number(value))) {
     return Number(value);
@@ -20,23 +27,28 @@ function pickNumber(value: AnswerValue | undefined, fallback: number): number {
   return fallback;
 }
 
+function readCost(answers: Record<string, AnswerValue>, field: CostKey, fallback: number): number {
+  return pickNumber(answers[costAnswerKey(field)], fallback);
+}
+
 export function extractCosts(
   defaults: CostDefaults,
   answers: Record<string, AnswerValue>
 ): Costs {
   return {
-    designerRate: pickNumber(answers.cost_designer, defaults.designer),
-    developerRate: pickNumber(answers.cost_developer, defaults.developer),
-    pmRate: pickNumber(answers.cost_pm, defaults.pm),
-    designerCount: pickNumber(answers.cost_numDesigners, defaults.numDesigners),
-    developerCount: pickNumber(answers.cost_numDevs, defaults.numDevs),
-    pmCount: pickNumber(answers.cost_numPMs, defaults.numPMs),
-    hoursPerYear: pickNumber(answers.cost_hoursYear, defaults.hoursYear),
+    designerRate:   readCost(answers, 'designer',     defaults.designer),
+    developerRate:  readCost(answers, 'developer',    defaults.developer),
+    pmRate:         readCost(answers, 'pm',           defaults.pm),
+    designerCount:  readCost(answers, 'numDesigners', defaults.numDesigners),
+    developerCount: readCost(answers, 'numDevs',      defaults.numDevs),
+    pmCount:        readCost(answers, 'numPMs',       defaults.numPMs),
+    hoursPerYear:   readCost(answers, 'hoursYear',    defaults.hoursYear),
   };
 }
 
 export function wasteMultiplier(maturityLevel: number): number {
-  return Math.max(0.05, 1 - ((maturityLevel - 1) / 4) * 0.95);
+  const range = LIKERT_MAX - LIKERT_MIN;
+  return Math.max(0.05, 1 - ((maturityLevel - LIKERT_MIN) / range) * 0.95);
 }
 
 function dimensionAnnualBase(
@@ -67,7 +79,7 @@ export function calculateWaste(
   dimensionScores.forEach(dimension => {
     const annualBase = dimensionAnnualBase(dimension.waste, costs);
     currentWaste += annualBase * wasteMultiplier(dimension.score);
-    targetWaste += annualBase * wasteMultiplier(4);
+    targetWaste += annualBase * wasteMultiplier(TARGET_MATURITY_LEVEL);
   });
 
   return { currentWaste, targetWaste, annualSaving: currentWaste - targetWaste };
@@ -78,11 +90,10 @@ export function wasteByMaturityLevel(
   costs: Costs
 ): number[] {
   const dimensions = getAllDimensions(config);
-  return [1, 2, 3, 4, 5].map(level => {
-    let totalWaste = 0;
-    dimensions.forEach(dimension => {
-      totalWaste += dimensionAnnualBase(dimension.waste, costs) * wasteMultiplier(level);
-    });
-    return totalWaste;
-  });
+  return LIKERT_SCALE.map(level =>
+    dimensions.reduce(
+      (total, dimension) => total + dimensionAnnualBase(dimension.waste, costs) * wasteMultiplier(level),
+      0
+    )
+  );
 }

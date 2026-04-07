@@ -7,3 +7,12 @@ export function formatCompact(value: number): string {
   if (value >= 1e3) return Math.round(value / 1e3) + 'k €';
   return Math.round(value) + ' €';
 }
+
+export function formatScore(score: number): string {
+  return score.toFixed(1);
+}
+
+export function formatSignedDelta(delta: number): string {
+  const arrow = delta >= 0 ? '▲' : '▼';
+  return `${arrow} ${Math.abs(delta).toFixed(1)}`;
+}

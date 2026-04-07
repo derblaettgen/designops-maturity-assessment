@@ -1,4 +1,5 @@
 import { useSurveyStore } from '../../store/useSurveyStore';
+import { LIKERT_SCALE } from '../../lib/constants';
 import type { LikertQuestion } from '../../types/survey';
 import './LikertScale.css';
 
@@ -13,7 +14,7 @@ export function LikertScale({ question }: LikertScaleProps) {
 
   return (
     <div className="likert">
-      {[1, 2, 3, 4, 5].map(scale => {
+      {LIKERT_SCALE.map(scale => {
         const inputId = `${question.id}_${scale}`;
         return (
           <div className="opt" key={scale}>

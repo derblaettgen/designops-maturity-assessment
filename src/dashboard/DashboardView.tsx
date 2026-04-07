@@ -1,9 +1,11 @@
+import { useMemo } from 'react';
 import { useSurveyStore } from '../store/useSurveyStore';
 import { getAllDimensionScores, getOverallScore } from '../lib/scoring';
 import { extractCosts, calculateWaste } from '../lib/waste';
 import { maturityLabel, maturityLevelKey } from '../lib/maturity';
-import { formatCompact } from '../lib/format';
-import { KpiCard } from './KpiCard';
+import { formatCompact, formatScore, formatSignedDelta } from '../lib/format';
+import { KpiCard, type KpiLevel } from './KpiCard';
+import { DashCard } from './DashCard';
 import { DimensionBars } from './DimensionBars';
 import { RankingTable } from './RankingTable';
 import { GapAnalysisTable } from './GapAnalysisTable';
@@ -13,18 +15,72 @@ import { WasteLevelsChart } from './charts/WasteLevelsChart';
 import { RoiChart } from './charts/RoiChart';
 import './DashboardView.css';
 
+interface KpiCardData {
+  level: KpiLevel;
+  value: string;
+  label: string;
+  badge?: string;
+}
+
 export function DashboardView() {
   const config = useSurveyStore(state => state.config);
   const answers = useSurveyStore(state => state.answers);
 
-  const dimensionScores = getAllDimensionScores(config, answers);
-  const overallScore = getOverallScore(dimensionScores);
-  const costs = extractCosts(config.costDefaults, answers);
-  const { currentWaste, annualSaving } = calculateWaste(dimensionScores, costs);
+  const { dimensionScores, overallScore, costs, currentWaste, annualSaving } = useMemo(() => {
+    const computedDimensionScores = getAllDimensionScores(config, answers);
+    const computedOverallScore = getOverallScore(computedDimensionScores);
+    const computedCosts = extractCosts(config.costDefaults, answers);
+    const wasteResult = calculateWaste(computedDimensionScores, computedCosts);
+    return {
+      dimensionScores: computedDimensionScores,
+      overallScore: computedOverallScore,
+      costs: computedCosts,
+      currentWaste: wasteResult.currentWaste,
+      annualSaving: wasteResult.annualSaving,
+    };
+  }, [config, answers]);
 
   const overall = config.benchmarks.overall;
   const marketDelta = overallScore - overall.marketAvg;
   const isAboveAverage = marketDelta >= 0;
+
+  const kpiCards: KpiCardData[] = [
+    {
+      level: maturityLevelKey(overallScore),
+      value: formatScore(overallScore),
+      label: 'Ihr Gesamt-Reifegrad',
+      badge: maturityLabel(overallScore),
+    },
+    {
+      level: 'market',
+      value: formatScore(overall.marketAvg),
+      label: 'Marktdurchschnitt DACH',
+      badge: maturityLabel(overall.marketAvg),
+    },
+    {
+      level: 'top',
+      value: formatScore(overall.topPerformer),
+      label: 'Top-Performer',
+      badge: maturityLabel(overall.topPerformer),
+    },
+    {
+      level: isAboveAverage ? 'positive' : 'negative',
+      value: formatSignedDelta(marketDelta),
+      label: 'vs. Markt',
+      badge: isAboveAverage ? 'Überdurchschnittlich' : 'Unter Durchschnitt',
+    },
+    {
+      level: 'waste',
+      value: formatCompact(currentWaste),
+      label: 'Verschwendung / Jahr (aktuell)',
+    },
+    {
+      level: 'saving',
+      value: formatCompact(annualSaving),
+      label: 'Einsparpotenzial / Jahr',
+      badge: 'bei Reifegrad 4.0',
+    },
+  ];
 
   return (
     <div className="dashboard active">
@@ -37,63 +93,23 @@ export function DashboardView() {
       </div>
 
       <div className="dash-kpis">
-        <KpiCard
-          level={maturityLevelKey(overallScore)}
-          value={overallScore.toFixed(1)}
-          label="Ihr Gesamt-Reifegrad"
-          badge={maturityLabel(overallScore)}
-        />
-        <KpiCard
-          level="market"
-          value={overall.marketAvg.toFixed(1)}
-          label="Marktdurchschnitt DACH"
-          badge={maturityLabel(overall.marketAvg)}
-        />
-        <KpiCard
-          level="top"
-          value={overall.topPerformer.toFixed(1)}
-          label="Top-Performer"
-          badge={maturityLabel(overall.topPerformer)}
-        />
-        <KpiCard
-          level={isAboveAverage ? 'positive' : 'negative'}
-          value={`${isAboveAverage ? '▲' : '▼'} ${Math.abs(marketDelta).toFixed(1)}`}
-          label="vs. Markt"
-          badge={isAboveAverage ? 'Überdurchschnittlich' : 'Unter Durchschnitt'}
-        />
-        <KpiCard
-          level="waste"
-          value={formatCompact(currentWaste)}
-          label="Verschwendung / Jahr (aktuell)"
-        />
-        <KpiCard
-          level="saving"
-          value={formatCompact(annualSaving)}
-          label="Einsparpotenzial / Jahr"
-          badge="bei Reifegrad 4.0"
-        />
+        {kpiCards.map(card => (
+          <KpiCard key={card.label} {...card} />
+        ))}
       </div>
 
       <div className="dash-grid">
-        <div className="dash-card">
-          <h3>🕸️ Radar: Sie vs. Markt vs. Top-Performer</h3>
+        <DashCard title="🕸️ Radar: Sie vs. Markt vs. Top-Performer">
           <RadarChart dimensionScores={dimensionScores} />
-        </div>
-        <div className="dash-card">
-          <h3>📊 Dimensionen im Detail</h3>
+        </DashCard>
+        <DashCard title="📊 Dimensionen im Detail">
           <DimensionBars dimensionScores={dimensionScores} />
           <div className="bench-legend">
-            <span>
-              <span className="dot dot--user" /> Ihr Wert
-            </span>
-            <span>
-              <span className="dot dot--market" /> Marktdurchschnitt
-            </span>
-            <span>
-              <span className="line" /> Top-Performer
-            </span>
+            <span><span className="dot dot--user" /> Ihr Wert</span>
+            <span><span className="dot dot--market" /> Marktdurchschnitt</span>
+            <span><span className="line" /> Top-Performer</span>
           </div>
-        </div>
+        </DashCard>
       </div>
 
       <RankingTable />
@@ -102,14 +118,12 @@ export function DashboardView() {
       <RoiHighlight annualSaving={annualSaving} costs={costs} />
 
       <div className="dash-grid">
-        <div className="dash-card">
-          <h3>💰 Einsparung pro Reifegrad-Stufe</h3>
+        <DashCard title="💰 Einsparung pro Reifegrad-Stufe">
           <WasteLevelsChart costs={costs} />
-        </div>
-        <div className="dash-card">
-          <h3>📈 ROI über 3 Jahre (realistisches Szenario)</h3>
+        </DashCard>
+        <DashCard title="📈 ROI über 3 Jahre (realistisches Szenario)">
           <RoiChart annualSaving={annualSaving} />
-        </div>
+        </DashCard>
       </div>
 
       <div className="dash-card dash-card--cta">
@@ -119,12 +133,7 @@ export function DashboardView() {
           <strong>Q3 2026</strong> auf adesso.de. Nutzen Sie Ihre individuelle Auswertung als
           Basis für Ihren DesignOps Business Case.
         </p>
-        <a
-          href="https://www.adesso.de"
-          target="_blank"
-          rel="noreferrer"
-          className="btn btn-primary"
-        >
+        <a href="https://www.adesso.de" target="_blank" rel="noreferrer" className="btn btn-primary">
           Mehr erfahren auf adesso.de →
         </a>
       </div>

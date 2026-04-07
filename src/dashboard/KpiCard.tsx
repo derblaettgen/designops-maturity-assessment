@@ -1,7 +1,10 @@
+import type { MaturityLevel } from '../lib/maturity';
 import './KpiCard.css';
 
+export type KpiLevel = MaturityLevel | 'market' | 'top' | 'positive' | 'negative' | 'waste' | 'saving';
+
 interface KpiCardProps {
-  level: string;
+  level: KpiLevel;
   value: string;
   label: string;
   badge?: string | null;

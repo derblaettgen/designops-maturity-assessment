@@ -1,4 +1,5 @@
 import { useSurveyStore } from '../store/useSurveyStore';
+import { isAnswered } from '../lib/scoring';
 import type { Question } from '../types/survey';
 import './QuestionCard.css';
 import { LikertScale } from './inputs/LikertScale';
@@ -11,24 +12,17 @@ interface QuestionCardProps {
   question: Question;
 }
 
-function isAnsweredValue(value: unknown): boolean {
-  if (value === undefined || value === '') return false;
-  if (Array.isArray(value) && value.length === 0) return false;
-  return true;
-}
-
 function renderInput(question: Question) {
   switch (question.type) {
-    case 'likert':
-      return <LikertScale question={question} />;
-    case 'select':
-      return <SelectInput question={question} />;
-    case 'multi':
-      return <MultiSelect question={question} />;
-    case 'textarea':
-      return <TextareaInput question={question} />;
-    case 'cost':
-      return <CostBlock />;
+    case 'likert':   return <LikertScale question={question} />;
+    case 'select':   return <SelectInput question={question} />;
+    case 'multi':    return <MultiSelect question={question} />;
+    case 'textarea': return <TextareaInput question={question} />;
+    case 'cost':     return <CostBlock />;
+    default: {
+      const exhaustiveCheck: never = question;
+      return exhaustiveCheck;
+    }
   }
 }
 
@@ -36,8 +30,7 @@ export function QuestionCard({ question }: QuestionCardProps) {
   const answer = useSurveyStore(state => state.answers[question.id]);
   const hasError = useSurveyStore(state => state.failedIds.includes(question.id));
 
-  const isAnswered = isAnsweredValue(answer);
-  const className = ['qcard', isAnswered ? 'answered' : '', hasError ? 'error' : '']
+  const className = ['qcard', isAnswered(answer) ? 'answered' : '', hasError ? 'error' : '']
     .filter(Boolean)
     .join(' ');
 

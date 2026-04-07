@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import type { AnswerValue, SavedState, SurveyConfig } from '../types/survey';
+import { isAnswered } from '../lib/scoring';
+import { costAnswerKey } from '../lib/waste';
 
 export interface ValidationResult {
   valid: boolean;
@@ -36,8 +38,8 @@ const EMPTY_CONFIG: SurveyConfig = {
 function buildInitialAnswers(config: SurveyConfig): Record<string, AnswerValue> {
   const answers: Record<string, AnswerValue> = {};
 
-  (Object.keys(config.costDefaults) as Array<keyof typeof config.costDefaults>).forEach(key => {
-    answers['cost_' + key] = config.costDefaults[key];
+  (Object.keys(config.costDefaults) as Array<keyof typeof config.costDefaults>).forEach(field => {
+    answers[costAnswerKey(field)] = config.costDefaults[field];
   });
 
   config.sections.forEach(section => {
@@ -100,12 +102,7 @@ export const useSurveyStore = create<SurveyState>((set, get) => ({
 
     section.questions.forEach(question => {
       if (!question.req) return;
-      const answer = answers[question.id];
-      if (
-        answer === undefined ||
-        answer === '' ||
-        (Array.isArray(answer) && answer.length === 0)
-      ) {
+      if (!isAnswered(answers[question.id])) {
         failedIds.push(question.id);
       }
     });

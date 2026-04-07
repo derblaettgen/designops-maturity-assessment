@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useSurveyStore } from '../store/useSurveyStore';
-import { countAnswered } from '../lib/scoring';
+import { countAnsweredQuestions } from '../lib/scoring';
 import './ProgressBar.css';
+
+const MINUTES_PER_REMAINING_STEP = 1.3;
+const PROGRESS_HEAD_START_PERCENT = 10;
 
 export function ProgressBar() {
   const sections = useSurveyStore(state => state.config.sections);
   const currentStep = useSurveyStore(state => state.currentStep);
-  const answers = useSurveyStore(state => state.answers);
+  const answeredCount = useSurveyStore(state => countAnsweredQuestions(state.config, state.answers));
   const goToStep = useSurveyStore(state => state.goToStep);
 
   const [isScrolled, setIsScrolled] = useState(false);
@@ -20,10 +23,12 @@ export function ProgressBar() {
   const totalSteps = sections.length;
   if (totalSteps === 0) return null;
 
-  const progressPercent = Math.min(Math.round((currentStep / totalSteps) * 100) + 10, 100);
+  const progressPercent = Math.min(
+    Math.round((currentStep / totalSteps) * 100) + PROGRESS_HEAD_START_PERCENT,
+    100
+  );
   const sectionName = sections[currentStep]?.name ?? '';
-  const remainingMinutes = Math.max(1, Math.round((totalSteps - currentStep) * 1.3));
-  const answeredCount = countAnswered(answers);
+  const remainingMinutes = Math.max(1, Math.round((totalSteps - currentStep) * MINUTES_PER_REMAINING_STEP));
 
   return (
     <div className={`progress-bar${isScrolled ? ' scrolled' : ''}`}>

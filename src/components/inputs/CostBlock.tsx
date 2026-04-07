@@ -1,8 +1,6 @@
 import { useSurveyStore } from '../../store/useSurveyStore';
-import type { CostDefaults } from '../../types/survey';
+import { costAnswerKey, pickNumber, type CostKey } from '../../lib/waste';
 import './CostBlock.css';
-
-type CostKey = keyof CostDefaults;
 
 interface CostField {
   key: CostKey;
@@ -29,16 +27,12 @@ interface CostRowProps {
 }
 
 function CostRow({ field }: CostRowProps) {
-  const defaults = useSurveyStore(state => state.config.costDefaults);
-  const currentAnswer = useSurveyStore(state => state.answers['cost_' + field.key]);
+  const answerKey = costAnswerKey(field.key);
+  const fallback = useSurveyStore(state => state.config.costDefaults[field.key]);
+  const currentAnswer = useSurveyStore(state => state.answers[answerKey]);
   const setAnswer = useSurveyStore(state => state.setAnswer);
 
-  const value =
-    typeof currentAnswer === 'number'
-      ? currentAnswer
-      : typeof currentAnswer === 'string' && currentAnswer !== ''
-        ? Number(currentAnswer)
-        : defaults[field.key];
+  const value = pickNumber(currentAnswer, fallback);
 
   return (
     <div className="cost-row">
@@ -47,9 +41,9 @@ function CostRow({ field }: CostRowProps) {
         className="cost-input"
         type="number"
         min={0}
-        id={`ci_${field.key}`}
+        id={`cost-input-${field.key}`}
         value={value}
-        onChange={event => setAnswer('cost_' + field.key, Number(event.target.value))}
+        onChange={event => setAnswer(answerKey, Number(event.target.value))}
       />
       <span className="cost-unit">{field.unit}</span>
     </div>

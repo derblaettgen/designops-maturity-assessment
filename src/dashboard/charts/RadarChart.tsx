@@ -1,16 +1,35 @@
+import { useMemo } from 'react';
 import { Radar } from 'react-chartjs-2';
 import type { ChartOptions, ChartData } from 'chart.js';
 import type { DimensionWithScore } from '../../lib/scoring';
-import { registerChartJs } from './registerChartJs';
-
-registerChartJs();
+import { LIKERT_MAX } from '../../lib/constants';
 
 interface RadarChartProps {
   dimensionScores: DimensionWithScore[];
 }
 
+const RADAR_OPTIONS: ChartOptions<'radar'> = {
+  responsive: true,
+  scales: {
+    r: {
+      min: 0,
+      max: LIKERT_MAX,
+      ticks: { stepSize: 1, color: '#718096', backdropColor: 'transparent', font: { size: 10 } },
+      grid: { color: 'rgba(203,213,224,.4)' },
+      angleLines: { color: 'rgba(203,213,224,.3)' },
+      pointLabels: { color: '#4A5568', font: { size: 11, weight: 600 } },
+    },
+  },
+  plugins: {
+    legend: {
+      position: 'bottom',
+      labels: { color: '#4A5568', padding: 14, usePointStyle: true },
+    },
+  },
+};
+
 export function RadarChart({ dimensionScores }: RadarChartProps) {
-  const data: ChartData<'radar'> = {
+  const data = useMemo<ChartData<'radar'>>(() => ({
     labels: dimensionScores.map(dimension => dimension.name),
     datasets: [
       {
@@ -42,27 +61,7 @@ export function RadarChart({ dimensionScores }: RadarChartProps) {
         pointRadius: 3,
       },
     ],
-  };
+  }), [dimensionScores]);
 
-  const options: ChartOptions<'radar'> = {
-    responsive: true,
-    scales: {
-      r: {
-        min: 0,
-        max: 5,
-        ticks: { stepSize: 1, color: '#718096', backdropColor: 'transparent', font: { size: 10 } },
-        grid: { color: 'rgba(203,213,224,.4)' },
-        angleLines: { color: 'rgba(203,213,224,.3)' },
-        pointLabels: { color: '#4A5568', font: { size: 11, weight: 600 } },
-      },
-    },
-    plugins: {
-      legend: {
-        position: 'bottom',
-        labels: { color: '#4A5568', padding: 14, usePointStyle: true },
-      },
-    },
-  };
-
-  return <Radar data={data} options={options} />;
+  return <Radar data={data} options={RADAR_OPTIONS} />;
 }

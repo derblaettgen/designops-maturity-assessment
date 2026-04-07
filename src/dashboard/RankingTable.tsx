@@ -1,12 +1,15 @@
 import { useSurveyStore } from '../store/useSurveyStore';
 import { maturityLabel, scoreBadgeClass } from '../lib/maturity';
+import { formatScore } from '../lib/format';
 import './RankingTable.css';
 
 export function RankingTable() {
   const branches = useSurveyStore(state => state.config.benchmarks.byBranch);
   const userBranchAnswer = useSurveyStore(state => state.answers.d_branch);
 
-  const sortedBranches = Object.entries(branches).sort((a, b) => b[1] - a[1]);
+  const sortedBranches = Object.entries(branches).sort(
+    ([, leftScore], [, rightScore]) => rightScore - leftScore
+  );
   const userBranch =
     typeof userBranchAnswer === 'string' ? userBranchAnswer.toLowerCase() : '';
 
@@ -37,7 +40,7 @@ export function RankingTable() {
                   {isUserBranch && ' (Ihre Branche)'}
                 </td>
                 <td className="rank-score">
-                  <strong>{branchScore.toFixed(1)}</strong>
+                  <strong>{formatScore(branchScore)}</strong>
                 </td>
                 <td>
                   <span className={`badge ${scoreBadgeClass(branchScore)}`}>
