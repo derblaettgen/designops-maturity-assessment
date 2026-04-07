@@ -16,7 +16,7 @@ export function NavigationButtons({ onSubmit }: NavigationButtonsProps) {
   const isLastStep = currentStep === totalSteps - 1;
 
   const scrollToFirstError = (failedIds: string[]) => {
-    const firstErrorCard = document.getElementById('qc-' + failedIds[0]);
+    const firstErrorCard = document.getElementById('question-card-' + failedIds[0]);
     firstErrorCard?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
 
@@ -35,7 +35,7 @@ export function NavigationButtons({ onSubmit }: NavigationButtonsProps) {
   };
 
   return (
-    <div className="nav">
+    <div className="nav-buttons">
       {isFirstStep ? (
         <div />
       ) : (
@@ -43,7 +43,7 @@ export function NavigationButtons({ onSubmit }: NavigationButtonsProps) {
           ← Zurück
         </button>
       )}
-      <span className="nav-center">
+      <span className="nav-buttons__center">
         {currentStep + 1} / {totalSteps}
       </span>
       {isLastStep ? (

@@ -11,8 +11,8 @@ export function StepHeader({ section }: StepHeaderProps) {
   const totalSteps = useSurveyStore(state => state.config.sections.length);
 
   return (
-    <div className="step-head">
-      <div className="step-number">
+    <div className="step-header">
+      <div className="step-header__number">
         Abschnitt {currentStep + 1} von {totalSteps} — {section.name}
       </div>
       <h2>

@@ -14,9 +14,9 @@ function averageHourlyRate(costs: Costs): number {
 export function RoiHighlight({ annualSaving, costs }: RoiHighlightProps) {
   return (
     <div className="roi-highlight">
-      <div className="sub">💰 Jährliches Einsparpotenzial bei Reifegrad 4.0</div>
-      <div className="big">{formatCompact(annualSaving)}</div>
-      <div className="sub">
+      <div className="roi-highlight__caption">💰 Jährliches Einsparpotenzial bei Reifegrad 4.0</div>
+      <div className="roi-highlight__amount">{formatCompact(annualSaving)}</div>
+      <div className="roi-highlight__caption">
         Basierend auf {costs.designerCount} Designer:innen, {costs.developerCount} Developers,{' '}
         {costs.pmCount} PMs · Stundensätze: Ø {averageHourlyRate(costs)} €
       </div>

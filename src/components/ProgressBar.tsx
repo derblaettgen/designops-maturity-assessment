@@ -31,29 +31,33 @@ export function ProgressBar() {
   const remainingMinutes = Math.max(1, Math.round((totalSteps - currentStep) * MINUTES_PER_REMAINING_STEP));
 
   return (
-    <div className={`progress-bar${isScrolled ? ' scrolled' : ''}`}>
-      <div className="progress-inner">
-        <div className="prog-row">
-          <span className="prog-section">
+    <div className={`progress-bar${isScrolled ? ' progress-bar--scrolled' : ''}`}>
+      <div className="progress-bar__inner">
+        <div className="progress-bar__row">
+          <span className="progress-bar__section">
             Abschnitt {currentStep + 1} von {totalSteps} — {sectionName}
           </span>
-          <div className="prog-meta">
+          <div className="progress-bar__meta">
             <span>{answeredCount} beantwortet</span>
-            <span className="prog-sep">·</span>
+            <span className="progress-bar__separator">·</span>
             <span>~{remainingMinutes} Min.</span>
           </div>
         </div>
-        <div className="prog-track">
-          <div className="prog-fill" style={{ width: `${progressPercent}%` }} />
+        <div className="progress-bar__track">
+          <div className="progress-bar__fill" style={{ width: `${progressPercent}%` }} />
         </div>
-        <div className="prog-dots">
+        <div className="progress-bar__dots">
           {sections.map((section, index) => {
-            const stateClass =
-              index < currentStep ? ' done' : index === currentStep ? ' active' : '';
+            const stateModifier =
+              index < currentStep
+                ? ' progress-bar__dot--done'
+                : index === currentStep
+                  ? ' progress-bar__dot--active'
+                  : '';
             return (
               <div
                 key={section.id}
-                className={`prog-dot${stateClass}`}
+                className={`progress-bar__dot${stateModifier}`}
                 onClick={() => goToStep(index)}
                 role="button"
                 tabIndex={0}

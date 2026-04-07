@@ -33,16 +33,16 @@ export function SurveyShell({ children }: SurveyShellProps) {
           </p>
           <div className="hero-stats">
             <div className="hero-stat">
-              <div className="val">~12</div>
-              <div className="lbl">Minuten</div>
+              <div className="hero-stat__value">~12</div>
+              <div className="hero-stat__label">Minuten</div>
             </div>
             <div className="hero-stat">
-              <div className="val">9</div>
-              <div className="lbl">Abschnitte</div>
+              <div className="hero-stat__value">9</div>
+              <div className="hero-stat__label">Abschnitte</div>
             </div>
             <div className="hero-stat">
-              <div className="val">100%</div>
-              <div className="lbl">Anonym</div>
+              <div className="hero-stat__value">100%</div>
+              <div className="hero-stat__label">Anonym</div>
             </div>
           </div>
         </div>

@@ -13,9 +13,9 @@ interface KpiCardProps {
 export function KpiCard({ level, value, label, badge }: KpiCardProps) {
   return (
     <div className="dash-kpi" data-level={level}>
-      <div className="kv">{value}</div>
-      <div className="kl">{label}</div>
-      {badge && <div className="ks">{badge}</div>}
+      <div className="dash-kpi__value">{value}</div>
+      <div className="dash-kpi__label">{label}</div>
+      {badge && <div className="dash-kpi__sublabel">{badge}</div>}
     </div>
   );
 }

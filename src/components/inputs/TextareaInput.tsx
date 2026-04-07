@@ -14,7 +14,7 @@ export function TextareaInput({ question }: TextareaInputProps) {
 
   return (
     <textarea
-      className="tarea"
+      className="textarea-input"
       placeholder="Ihr Kommentar (optional)…"
       value={value}
       onChange={event => setAnswer(question.id, event.target.value)}

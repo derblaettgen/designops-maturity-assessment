@@ -19,12 +19,12 @@ export function SectionProgressBar({ section }: SectionProgressBarProps) {
   if (!likertQuestions.length) return null;
 
   return (
-    <div className="cb">
-      <span className="cb-label">Fortschritt</span>
-      <div className="cb-track">
-        <div className="cb-fill" style={{ width: `${percentComplete}%` }} />
+    <div className="section-progress">
+      <span className="section-progress__label">Fortschritt</span>
+      <div className="section-progress__track">
+        <div className="section-progress__fill" style={{ width: `${percentComplete}%` }} />
       </div>
-      <span className="cb-pct">{percentComplete}%</span>
+      <span className="section-progress__percent">{percentComplete}%</span>
     </div>
   );
 }

@@ -17,7 +17,7 @@ export function LikertScale({ question }: LikertScaleProps) {
       {LIKERT_SCALE.map(scale => {
         const inputId = `${question.id}_${scale}`;
         return (
-          <div className="opt" key={scale}>
+          <div className="likert__option" key={scale}>
             <input
               type="radio"
               name={question.id}
@@ -27,8 +27,8 @@ export function LikertScale({ question }: LikertScaleProps) {
               onChange={() => setAnswer(question.id, scale)}
             />
             <label htmlFor={inputId}>
-              <span className="num">{scale}</span>
-              <span className="lbl">{labels[scale - 1]}</span>
+              <span className="likert__number">{scale}</span>
+              <span className="likert__label">{labels[scale - 1]}</span>
             </label>
           </div>
         );

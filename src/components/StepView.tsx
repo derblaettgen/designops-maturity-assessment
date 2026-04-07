@@ -23,7 +23,7 @@ export function StepView({ onSubmit }: StepViewProps) {
   if (!section) return null;
 
   return (
-    <div className="container" ref={containerRef}>
+    <div className="step-view" ref={containerRef}>
       <div className="step active" key={section.id}>
         <StepHeader section={section} />
         {section.questions.map(question => (

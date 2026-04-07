@@ -32,7 +32,7 @@ export function RankingTable() {
               userBranch.includes(branchName.toLowerCase().split('/')[0].trim());
 
             return (
-              <tr key={branchName} className={isUserBranch ? 'you' : undefined}>
+              <tr key={branchName} className={isUserBranch ? 'ranking-table__row--user' : undefined}>
                 <td className="rank-pos">{position + 1}</td>
                 <td className="rank-name">
                   {isUserBranch && '→ '}

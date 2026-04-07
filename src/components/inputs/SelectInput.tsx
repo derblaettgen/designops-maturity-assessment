@@ -13,10 +13,10 @@ export function SelectInput({ question }: SelectInputProps) {
   const value = typeof currentAnswer === 'string' ? currentAnswer : '';
 
   return (
-    <div className="sel-wrap">
+    <div className="select-input">
       <select
-        id={`inp-${question.id}`}
-        className={value ? 'filled' : ''}
+        id={`select-input-${question.id}`}
+        className={value ? 'select-input--filled' : ''}
         value={value}
         onChange={event => setAnswer(question.id, event.target.value)}
       >

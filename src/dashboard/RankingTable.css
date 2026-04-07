@@ -1,9 +1,10 @@
 /* RankingTable.css — user-branch highlight (table layout in DashboardView.css) */
 
-.rank-table tr.you {
+.rank-table tr.ranking-table__row--user {
   background: var(--color-brand-lightest);
   outline: 2px solid var(--color-brand);
   outline-offset: -2px;
   font-weight: 700;
+
+  td:first-child { color: var(--color-brand); }
 }
-.rank-table tr.you td:first-child { color: var(--color-brand); }

@@ -30,19 +30,23 @@ export function QuestionCard({ question }: QuestionCardProps) {
   const answer = useSurveyStore(state => state.answers[question.id]);
   const hasError = useSurveyStore(state => state.failedIds.includes(question.id));
 
-  const className = ['qcard', isAnswered(answer) ? 'answered' : '', hasError ? 'error' : '']
+  const className = [
+    'question-card',
+    isAnswered(answer) ? 'question-card--answered' : '',
+    hasError ? 'question-card--error' : '',
+  ]
     .filter(Boolean)
     .join(' ');
 
   return (
-    <div className={className} id={`qc-${question.id}`}>
-      <div className="check-mark">✓</div>
-      <div className="q-id">
+    <div className={className} id={`question-card-${question.id}`}>
+      <div className="question-card__check">✓</div>
+      <div className="question-card__id">
         {question.id.toUpperCase()}
-        {question.req && <span className="q-req"> *</span>}
+        {question.req && <span className="question-card__required"> *</span>}
       </div>
-      <div className="q-text">{question.text}</div>
-      {question.hint && <div className="q-hint">{question.hint}</div>}
+      <div className="question-card__text">{question.text}</div>
+      {question.hint && <div className="question-card__hint">{question.hint}</div>}
       {renderInput(question)}
     </div>
   );

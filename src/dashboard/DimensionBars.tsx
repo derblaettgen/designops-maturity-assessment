@@ -16,26 +16,26 @@ export function DimensionBars({ dimensionScores }: DimensionBarsProps) {
   return (
     <div>
       {dimensionScores.map(dimension => (
-        <div className="dim-row" key={dimension.key}>
-          <span className="dim-lbl">{dimension.name}</span>
-          <div className="dim-track">
+        <div className="dimension-bar" key={dimension.key}>
+          <span className="dimension-bar__label">{dimension.name}</span>
+          <div className="dimension-bar__track">
             <div
-              className="dim-fill"
+              className="dimension-bar__fill"
               data-level={maturityLevelKey(dimension.score)}
               style={{ width: `${asPercent(dimension.score)}%` }}
             />
             <div
-              className="dim-bench"
+              className="dimension-bar__top-marker"
               title="Top-Performer"
               style={{ left: `${asPercent(dimension.topPerformer)}%` }}
             />
             <div
-              className="dim-bench-avg"
+              className="dimension-bar__market-marker"
               title="Marktdurchschnitt"
               style={{ left: `${asPercent(dimension.marketAvg)}%` }}
             />
           </div>
-          <span className="dim-val">{formatScore(dimension.score)}</span>
+          <span className="dimension-bar__value">{formatScore(dimension.score)}</span>
         </div>
       ))}
     </div>
