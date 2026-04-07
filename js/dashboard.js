@@ -97,12 +97,11 @@ function wasteMultiplier(maturityLevel) {
 }
 
 function calculateWaste(dimensionScores, { designerRate, developerRate, pmRate, designerCount, developerCount, pmCount, hoursPerYear }) {
-  const wasteFractions = state.config.wasteFractions;
   let currentWaste  = 0;
   let targetWaste   = 0;
 
-  dimensionScores.forEach((dimension, index) => {
-    const fraction     = wasteFractions[index];
+  dimensionScores.forEach(dimension => {
+    const fraction     = dimension.waste;
     const annualBase   = (fraction.d * designerCount * designerRate
                         + fraction.v * developerCount * developerRate
                         + fraction.p * pmCount * pmRate)
@@ -143,9 +142,9 @@ function appendKPICard(container, { level, value, label, badge }) {
 }
 
 function fillKPICards(container, averageScore, currentWaste, annualSaving) {
-  const benchmark = state.config.benchmark;
-  const marketDelta     = averageScore - benchmark.marketAvg.avg;
-  const isAboveAverage  = marketDelta >= 0;
+  const overall        = state.config.benchmarks.overall;
+  const marketDelta    = averageScore - overall.marketAvg;
+  const isAboveAverage = marketDelta >= 0;
 
   appendKPICard(container, {
     level: maturityLevelKey(averageScore),
@@ -156,16 +155,16 @@ function fillKPICards(container, averageScore, currentWaste, annualSaving) {
 
   appendKPICard(container, {
     level: 'market',
-    value: benchmark.marketAvg.avg.toFixed(1),
+    value: overall.marketAvg.toFixed(1),
     label: 'Marktdurchschnitt DACH',
-    badge: maturityLabel(benchmark.marketAvg.avg)
+    badge: maturityLabel(overall.marketAvg)
   });
 
   appendKPICard(container, {
     level: 'top',
-    value: benchmark.topPerformer.avg.toFixed(1),
+    value: overall.topPerformer.toFixed(1),
     label: 'Top-Performer',
-    badge: maturityLabel(benchmark.topPerformer.avg)
+    badge: maturityLabel(overall.topPerformer)
   });
 
   appendKPICard(container, {
@@ -193,8 +192,7 @@ function fillKPICards(container, averageScore, currentWaste, annualSaving) {
 // ===== RANKING TABLE =====
 
 function fillRankingTable(tableBody) {
-  const benchmark     = state.config.benchmark;
-  const sortedBranches = Object.entries(benchmark.byBranch).sort((a, b) => b[1] - a[1]);
+  const sortedBranches = Object.entries(state.config.benchmarks.byBranch).sort((a, b) => b[1] - a[1]);
   const userBranch     = (state.answers.d_branch ?? '').toLowerCase();
 
   sortedBranches.forEach(([branchName, branchScore], position) => {
@@ -218,12 +216,11 @@ function fillRankingTable(tableBody) {
 // ===== GAP ANALYSIS TABLE =====
 
 function fillGapAnalysisTable(tableBody, dimensionScores) {
-  const benchmark   = state.config.benchmark;
   const gapAnalysis = dimensionScores
     .map(dimension => ({
       ...dimension,
-      topPerformerScore: benchmark.topPerformer[dimension.key] ?? 4.3,
-      gapToTop:          (benchmark.topPerformer[dimension.key] ?? 4.3) - dimension.score
+      topPerformerScore: dimension.topPerformer,
+      gapToTop:          dimension.topPerformer - dimension.score
     }))
     .sort((a, b) => b.gapToTop - a.gapToTop);
 
@@ -252,13 +249,11 @@ function fillGapAnalysisTable(tableBody, dimensionScores) {
 // ===== DIMENSION BARS =====
 
 function fillDimensionBars(container, dimensionScores) {
-  const benchmark = state.config.benchmark;
-
   dimensionScores.forEach(dimension => {
     const row                 = cloneTemplate('tpl-dim-bar');
     const scorePercent        = (dimension.score / 5) * 100;
-    const topPerformerPercent = ((benchmark.topPerformer[dimension.key] ?? 4.3) / 5) * 100;
-    const marketAvgPercent    = (benchmark.marketAvg[dimension.key] / 5) * 100;
+    const topPerformerPercent = (dimension.topPerformer / 5) * 100;
+    const marketAvgPercent    = (dimension.marketAvg / 5) * 100;
 
     row.querySelector('.dim-lbl').textContent = dimension.name;
     row.querySelector('.dim-val').textContent = dimension.score.toFixed(1);
@@ -277,7 +272,6 @@ function fillDimensionBars(container, dimensionScores) {
 // ===== CHART INITIALISATION =====
 
 function initRadarChart(dimensionScores) {
-  const benchmark    = state.config.benchmark;
   const canvasContext = document.getElementById('chRadar').getContext('2d');
 
   new Chart(canvasContext, {
@@ -296,7 +290,7 @@ function initRadarChart(dimensionScores) {
         },
         {
           label:           'Marktdurchschnitt',
-          data:            dimensionScores.map(dimension => benchmark.marketAvg[dimension.key]),
+          data:            dimensionScores.map(dimension => dimension.marketAvg),
           backgroundColor: 'rgba(160,174,192,.08)',
           borderColor:     '#A0AEC0',
           borderWidth:     1,
@@ -305,7 +299,7 @@ function initRadarChart(dimensionScores) {
         },
         {
           label:                'Top-Performer',
-          data:                 dimensionScores.map(dimension => benchmark.topPerformer[dimension.key]),
+          data:                 dimensionScores.map(dimension => dimension.topPerformer),
           backgroundColor:      'rgba(0,180,160,.08)',
           borderColor:          '#00B4A0',
           borderWidth:          2,
@@ -335,11 +329,12 @@ function initRadarChart(dimensionScores) {
 
 function initWasteLevelsChart({ designerRate, developerRate, pmRate, designerCount, developerCount, pmCount, hoursPerYear }) {
   const canvasContext  = document.getElementById('chLevels').getContext('2d');
-  const wasteFractions = state.config.wasteFractions;
+  const dimensions     = state.config.dimensions;
 
   const wasteByLevel = [1, 2, 3, 4, 5].map(level => {
     let totalWaste = 0;
-    wasteFractions.forEach(fraction => {
+    dimensions.forEach(dimension => {
+      const fraction = dimension.waste;
       totalWaste += (fraction.d * designerCount * designerRate
                    + fraction.v * developerCount * developerRate
                    + fraction.p * pmCount * pmRate)

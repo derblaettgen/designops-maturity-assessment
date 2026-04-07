@@ -1,7 +1,7 @@
 import { state } from '../engine.js';
 
-export function buildSectionProgressBar(step) {
-  const likertQuestions = step.questions.filter(question => question.type === 'likert');
+export function buildSectionProgressBar(section) {
+  const likertQuestions = section.questions.filter(question => question.type === 'likert');
   if (!likertQuestions.length) return '';
 
   const answeredCount   = likertQuestions.filter(question => state.answers[question.id]).length;

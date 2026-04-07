@@ -201,12 +201,13 @@ function applyValidationErrors(failedIds) {
 // ===== PROGRESS =====
 
 function updateProgressBar() {
-  const totalSteps = state.config.steps.length;
+  const sections = state.config.sections;
+  const totalSteps = sections.length;
   const progressPercent = Math.min(Math.round((state.currentStep / totalSteps) * 100) + 10, 100);
 
   document.getElementById('progFill').style.width = progressPercent + '%';
   document.getElementById('progLabel').textContent =
-    `Abschnitt ${state.currentStep + 1} von ${totalSteps} — ${state.config.sectionNames[state.currentStep]}`;
+    `Abschnitt ${state.currentStep + 1} von ${totalSteps} — ${sections[state.currentStep].name}`;
   document.getElementById('progAnswered').textContent = `${countAnswered()} beantwortet`;
   document.getElementById('progTime').textContent =
     `~${Math.max(1, Math.round((totalSteps - state.currentStep) * 1.3))} Min.`;
@@ -215,15 +216,15 @@ function updateProgressBar() {
 }
 
 function renderProgressDots() {
-  const totalSteps = state.config.steps.length;
+  const totalSteps = state.config.sections.length;
   document.getElementById('progDots').innerHTML = Array.from({ length: totalSteps }, (_, index) =>
     `<div class="prog-dot ${index < state.currentStep ? 'done' : index === state.currentStep ? 'active' : ''}"></div>`
   ).join('');
 }
 
 function updateSectionProgress() {
-  const step            = state.config.steps[state.currentStep];
-  const likertQuestions = step.questions.filter(question => question.type === 'likert');
+  const section         = state.config.sections[state.currentStep];
+  const likertQuestions = section.questions.filter(question => question.type === 'likert');
   if (!likertQuestions.length) return;
 
   const answeredCount  = likertQuestions.filter(question => state.answers[question.id]).length;
@@ -260,14 +261,14 @@ function transitionToStep() {
 }
 
 function renderStep(direction) {
-  const step          = state.config.steps[state.currentStep];
+  const section       = state.config.sections[state.currentStep];
   const mainContainer = document.getElementById('main');
   const enterClass    = direction === 'backward' ? ' enter-from-left' : '';
 
   let html = `<div class="step active${enterClass}">`;
-  html += buildStepHeader(step);
-  step.questions.forEach(question => { html += buildQuestionCard(question); });
-  html += buildSectionProgressBar(step);
+  html += buildStepHeader(section);
+  section.questions.forEach(question => { html += buildQuestionCard(question); });
+  html += buildSectionProgressBar(section);
   html += buildNavigationButtons();
   html += `</div>`;
 

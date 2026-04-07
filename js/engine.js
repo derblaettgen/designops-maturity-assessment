@@ -16,8 +16,8 @@ export function init(config) {
     state.answers['cost_' + key] = defaults[key];
   });
 
-  config.steps.forEach(step => {
-    step.questions.forEach(question => {
+  config.sections.forEach(section => {
+    section.questions.forEach(question => {
       if (question.prefill && state.answers[question.id] === undefined) {
         state.answers[question.id] = question.prefill;
       }
@@ -38,10 +38,10 @@ export function restoreAnswers(savedAnswers) {
 }
 
 export function validate() {
-  const step      = state.config.steps[state.currentStep];
+  const section   = state.config.sections[state.currentStep];
   const failedIds = [];
 
-  step.questions.forEach(question => {
+  section.questions.forEach(question => {
     if (!question.req) return;
     const answer = state.answers[question.id];
     if (answer === undefined || answer === '' || (Array.isArray(answer) && answer.length === 0)) {
@@ -55,7 +55,7 @@ export function validate() {
 export function goNext() {
   const result = validate();
   if (!result.valid) return result;
-  state.currentStep = Math.min(state.currentStep + 1, state.config.steps.length - 1);
+  state.currentStep = Math.min(state.currentStep + 1, state.config.sections.length - 1);
   return result;
 }
 
@@ -66,7 +66,7 @@ export function goPrev() {
 }
 
 export function goToStep(stepIndex) {
-  const maxIndex = state.config.steps.length - 1;
+  const maxIndex = state.config.sections.length - 1;
   state.currentStep = Math.max(0, Math.min(stepIndex, maxIndex));
 }
 

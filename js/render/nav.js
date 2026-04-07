@@ -1,7 +1,7 @@
 import { state } from '../engine.js';
 
 export function buildNavigationButtons() {
-  const totalSteps = state.config.steps.length;
+  const totalSteps = state.config.sections.length;
   const isFirstStep = state.currentStep === 0;
   const isLastStep  = state.currentStep === totalSteps - 1;
 
