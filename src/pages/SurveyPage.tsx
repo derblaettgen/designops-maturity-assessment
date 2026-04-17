@@ -9,6 +9,7 @@ import { DashboardView } from '../dashboard/DashboardView';
 
 export function SurveyPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [shareUrl, setShareUrl] = useState<string | null>(null);
 
   const handleSubmit = () => {
     setIsSubmitted(true);
@@ -28,14 +29,17 @@ export function SurveyPage() {
     };
 
     submitToMongoDB(config, answers, results)
-      .then(() => clear())
+      .then(documentId => {
+        clear();
+        setShareUrl(`${window.location.origin}/result/${documentId}`);
+      })
       .catch(() => {
         // Dashboard wird trotzdem angezeigt, Daten sind im Store
       });
   };
 
   if (isSubmitted) {
-    return <DashboardView />;
+    return <DashboardView shareUrl={shareUrl} />;
   }
 
   return <StepView onSubmit={handleSubmit} />;

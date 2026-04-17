@@ -31,7 +31,7 @@ interface DashboardContentProps {
   isExportVersion?: boolean;
   onPdfClick?: () => void;
   isPdfLoading?: boolean;
-  shareUrl?: string;
+  shareUrl?: string | null;
 }
 
 export function DashboardContent({

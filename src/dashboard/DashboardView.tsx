@@ -17,7 +17,7 @@ interface DashboardViewProps {
     currentWaste: number;
     annualSaving: number;
   };
-  shareUrl?: string;
+  shareUrl?: string | null;
 }
 
 export function DashboardView({ precomputed, shareUrl }: DashboardViewProps = {}) {
