@@ -18,4 +18,4 @@ jobs:
             cd /var/www/designops-maturity-assessment
             git pull
             npm install
-            npm run build
+            VITE_API_KEY=${{ secrets.VITE_API_KEY }} npm run build
