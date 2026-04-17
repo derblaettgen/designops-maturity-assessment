@@ -10,3 +10,5 @@ vite.config.js
 .vscode/*
 !.vscode/extensions.json
 .idea
+
+.env
