@@ -2,7 +2,7 @@ import type { AnswerValue, SavedState, SurveyConfig } from '../types/survey';
 import type { DimensionWithScore } from './scoring';
 
 const STORAGE_KEY = 'designops-survey-v1';
-const API_BASE = 'http://217.160.192.226/api/v1';
+const API_BASE = 'https://designops-maturity.de/api/v1';
 const API_KEY = 'a68749be2f1d32fefae3a95ed2f20eb2b499e7076eae581fc77853705a3bb552';
 
 export function save(data: SavedState): void {
