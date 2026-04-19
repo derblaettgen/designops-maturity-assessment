@@ -125,6 +125,14 @@
   }
 }
 
+@media (max-width: 700px) {
+  .share-dropdown__menu {
+    right: auto;
+    left: 0;
+    min-width: 160px;
+  }
+}
+
 .dash-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -170,7 +178,13 @@
     }
   }
 
-  @media (max-width: 700px) { padding: 20px; }
+  @media (max-width: 700px) {
+    padding: 16px;
+
+    canvas { max-height: 260px; }
+
+    &.dash-card--cta { padding: 24px 16px; }
+  }
 }
 
 /* ===== SHARED RANK TABLE LAYOUT (used by RankingTable + GapAnalysisTable) ===== */
@@ -188,10 +202,24 @@
     font-size: var(--text-xs);
     text-transform: uppercase;
     letter-spacing: .5px;
+    white-space: nowrap;
   }
 
   td {
     padding: 10px 12px;
     border-bottom: 1px solid var(--color-gray-100);
+  }
+
+  @media (max-width: 700px) {
+    font-size: var(--text-xs);
+
+    th, td { padding: 8px 10px; }
+  }
+}
+
+.dash-card--scrollable {
+  @media (max-width: 700px) {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 }

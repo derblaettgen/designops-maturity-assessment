@@ -22,4 +22,10 @@
     font-size: var(--text-sm);
     line-height: 1.5;
   }
+
+  @media (max-width: 700px) {
+    padding: 20px 16px;
+
+    .roi-highlight__amount { font-size: 2rem; }
+  }
 }

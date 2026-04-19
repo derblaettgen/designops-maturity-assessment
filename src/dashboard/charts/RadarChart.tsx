@@ -8,27 +8,35 @@ interface RadarChartProps {
   dimensionScores: DimensionWithScore[];
 }
 
-const RADAR_OPTIONS: ChartOptions<'radar'> = {
-  responsive: true,
-  scales: {
-    r: {
-      min: 0,
-      max: LIKERT_MAX,
-      ticks: { stepSize: 1, color: '#718096', backdropColor: 'transparent', font: { size: 10 } },
-      grid: { color: 'rgba(203,213,224,.4)' },
-      angleLines: { color: 'rgba(203,213,224,.3)' },
-      pointLabels: { color: '#4A5568', font: { size: 11, weight: 600 } },
+const isMobile = () => window.innerWidth <= 700;
+
+function buildRadarOptions(): ChartOptions<'radar'> {
+  const mobile = isMobile();
+  return {
+    responsive: true,
+    maintainAspectRatio: true,
+    scales: {
+      r: {
+        min: 0,
+        max: LIKERT_MAX,
+        ticks: { stepSize: 1, color: '#718096', backdropColor: 'transparent', font: { size: mobile ? 8 : 10 } },
+        grid: { color: 'rgba(203,213,224,.4)' },
+        angleLines: { color: 'rgba(203,213,224,.3)' },
+        pointLabels: { color: '#4A5568', font: { size: mobile ? 9 : 11, weight: 600 } },
+      },
     },
-  },
-  plugins: {
-    legend: {
-      position: 'bottom',
-      labels: { color: '#4A5568', padding: 14, usePointStyle: true },
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: { color: '#4A5568', padding: mobile ? 10 : 14, usePointStyle: true, font: { size: mobile ? 10 : 12 } },
+      },
     },
-  },
-};
+  };
+}
 
 export function RadarChart({ dimensionScores }: RadarChartProps) {
+  const options = useMemo(buildRadarOptions, []);
+
   const data = useMemo<ChartData<'radar'>>(() => ({
     labels: dimensionScores.map(dimension => dimension.name),
     datasets: [
@@ -39,7 +47,7 @@ export function RadarChart({ dimensionScores }: RadarChartProps) {
         borderColor: '#004C93',
         borderWidth: 2,
         pointBackgroundColor: '#004C93',
-        pointRadius: 5,
+        pointRadius: isMobile() ? 3 : 5,
       },
       {
         label: 'Marktdurchschnitt',
@@ -58,10 +66,10 @@ export function RadarChart({ dimensionScores }: RadarChartProps) {
         borderWidth: 2,
         borderDash: [6, 3],
         pointBackgroundColor: '#00B4A0',
-        pointRadius: 3,
+        pointRadius: isMobile() ? 2 : 3,
       },
     ],
   }), [dimensionScores]);
 
-  return <Radar data={data} options={RADAR_OPTIONS} />;
+  return <Radar data={data} options={options} />;
 }

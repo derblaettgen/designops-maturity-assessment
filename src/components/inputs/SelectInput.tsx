@@ -16,6 +16,7 @@ export function SelectInput({ question }: SelectInputProps) {
     <div className="select-input">
       <select
         id={`select-input-${question.id}`}
+        aria-label={question.text}
         className={value ? 'select-input--filled' : ''}
         value={value}
         onChange={event => setAnswer(question.id, event.target.value)}

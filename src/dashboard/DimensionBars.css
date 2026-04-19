@@ -19,10 +19,10 @@
 
   .dimension-bar__track {
     flex: 1;
-    height: 12px;
+    height: 14px;
     background: var(--color-gray-100);
     border-radius: var(--radius-sm);
-    overflow: hidden;
+    overflow: visible;
     position: relative;
   }
 
@@ -32,27 +32,29 @@
     transition: width 1s var(--ease-standard);
     position: relative;
 
-    &[data-level="critical"]  { background: var(--color-danger); }
-    &[data-level="low"]       { background: var(--color-warning); }
-    &[data-level="mid"]       { background: #CA8A04; }
-    &[data-level="good"]      { background: var(--color-success); }
+    &[data-level="critical"],
+    &[data-level="low"],
+    &[data-level="mid"],
+    &[data-level="good"],
     &[data-level="excellent"] { background: var(--color-brand); }
-  }
-
-  .dimension-bar__top-marker {
-    position: absolute;
-    height: 100%;
-    width: 2px;
-    background: var(--color-warning);
-    top: 0;
   }
 
   .dimension-bar__market-marker {
     position: absolute;
     height: 100%;
     top: 0;
-    width: 2px;
-    border-left: 2px dashed var(--color-gray-300);
+    width: 3px;
+    background: var(--color-gray-500);
+    border-radius: 1px;
+  }
+
+  .dimension-bar__top-marker {
+    position: absolute;
+    top: -2px;
+    height: calc(100% + 4px);
+    width: 3px;
+    background: var(--color-accent);
+    border-radius: 1px;
   }
 
   .dimension-bar__value {
@@ -63,41 +65,45 @@
   }
 }
 
+/* ===== LEGEND ===== */
 .dimension-legend {
   display: flex;
   gap: 16px;
   margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-gray-200);
   font-size: var(--text-xs);
   color: var(--color-gray-500);
   flex-wrap: wrap;
 
-  span {
+  > span {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
   }
+}
 
-  .dimension-legend__dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    flex-shrink: 0;
+.dimension-legend__swatch {
+  flex-shrink: 0;
+}
 
-    &.dimension-legend__dot--user   { background: var(--color-brand); }
-    &.dimension-legend__dot--market { background: var(--color-gray-400); }
-  }
+.dimension-legend__swatch--fill {
+  width: 20px;
+  height: 8px;
+  border-radius: 3px;
+  background: var(--color-brand);
+}
 
-  .dimension-legend__line {
-    width: 14px;
-    height: 2px;
-    background: var(--color-warning);
-    flex-shrink: 0;
-    border-radius: 2px;
+.dimension-legend__swatch--market {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  background: var(--color-gray-500);
+}
 
-    &.dimension-legend__line--dashed {
-      background: none;
-      border-radius: 0;
-      border-top: 2px dashed var(--color-gray-300);
-    }
-  }
+.dimension-legend__swatch--top {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  background: var(--color-accent);
 }

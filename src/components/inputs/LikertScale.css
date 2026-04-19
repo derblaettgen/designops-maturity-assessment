@@ -59,8 +59,13 @@
 }
 
 @media (max-width: 700px) {
+  .likert__options {
+    gap: 8px;
+  }
+
   .likert__option label {
-    height: 36px;
-    font-size: var(--text-xs);
+    height: 44px;
+    font-size: var(--text-sm);
+    border-radius: var(--radius-full);
   }
 }

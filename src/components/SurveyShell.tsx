@@ -8,9 +8,11 @@ interface SurveyShellProps {
 export function SurveyShell({ children }: SurveyShellProps) {
   return (
     <>
-      {children}
+      <main>
+        {children}
+      </main>
 
-      <div className="footer">
+      <footer className="footer">
         <div className="footer-logo">adesso</div>
         DesignOps Reifegrad-Studie 2026 · adesso SE · Adessoplatz 1 · 44269 Dortmund
         <br />
@@ -29,7 +31,7 @@ export function SurveyShell({ children }: SurveyShellProps) {
         >
           Impressum
         </a>
-      </div>
+      </footer>
     </>
   );
 }

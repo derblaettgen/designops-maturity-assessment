@@ -198,17 +198,6 @@ export function DashboardContent({
         </DashCard>
         <DashCard title="📊 Dimensionen im Detail">
           <DimensionBars dimensionScores={dimensionScores} />
-          <div className="bench-legend">
-            <span>
-              <span className="dot dot--user" /> Ihr Wert
-            </span>
-            <span>
-              <span className="dot dot--market" /> Marktdurchschnitt
-            </span>
-            <span>
-              <span className="line" /> Top-Performer
-            </span>
-          </div>
         </DashCard>
       </div>
 

@@ -25,19 +25,33 @@ export function DimensionBars({ dimensionScores }: DimensionBarsProps) {
               style={{ width: `${asPercent(dimension.score)}%` }}
             />
             <div
-              className="dimension-bar__top-marker"
-              title="Top-Performer"
-              style={{ left: `${asPercent(dimension.topPerformer)}%` }}
+              className="dimension-bar__market-marker"
+              role="img"
+              aria-label={`Marktdurchschnitt: ${formatScore(dimension.marketAvg)}`}
+              style={{ left: `${asPercent(dimension.marketAvg)}%` }}
             />
             <div
-              className="dimension-bar__market-marker"
-              title="Marktdurchschnitt"
-              style={{ left: `${asPercent(dimension.marketAvg)}%` }}
+              className="dimension-bar__top-marker"
+              role="img"
+              aria-label={`Top-Performer: ${formatScore(dimension.topPerformer)}`}
+              style={{ left: `${asPercent(dimension.topPerformer)}%` }}
             />
           </div>
           <span className="dimension-bar__value">{formatScore(dimension.score)}</span>
         </div>
       ))}
+
+      <div className="dimension-legend" role="list" aria-label="Legende">
+        <span role="listitem">
+          <span className="dimension-legend__swatch dimension-legend__swatch--fill" /> Ihr Wert
+        </span>
+        <span role="listitem">
+          <span className="dimension-legend__swatch dimension-legend__swatch--market" /> Marktdurchschnitt
+        </span>
+        <span role="listitem">
+          <span className="dimension-legend__swatch dimension-legend__swatch--top" /> Top-Performer
+        </span>
+      </div>
     </div>
   );
 }

@@ -19,7 +19,7 @@ export function GapAnalysisTable({ dimensionScores }: GapAnalysisTableProps) {
   const dimensionGaps = getDimensionGaps(dimensionScores);
 
   return (
-    <div className="dash-card dash-card--spaced">
+    <div className="dash-card dash-card--spaced dash-card--scrollable">
       <h3>📋 Gap-Analyse: Ihr Weg zu den Top-Performern</h3>
       <table className="rank-table">
         <thead>

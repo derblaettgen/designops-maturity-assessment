@@ -14,7 +14,7 @@ export function RankingTable() {
     typeof userBranchAnswer === 'string' ? userBranchAnswer.toLowerCase() : '';
 
   return (
-    <div className="dash-card dash-card--spaced">
+    <div className="dash-card dash-card--spaced dash-card--scrollable">
       <h3>🏆 Branchen-Ranking: Wo stehen die Top-Performer?</h3>
       <table className="rank-table">
         <thead>
