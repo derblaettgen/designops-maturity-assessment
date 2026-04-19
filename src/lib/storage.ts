@@ -4,6 +4,7 @@ import type { DimensionWithScore } from './scoring';
 const STORAGE_KEY = 'designops-survey-v1';
 const API_BASE = 'https://designops-maturity.de/api/v1';
 const API_KEY = import.meta.env.VITE_API_KEY;
+const DEV_SUBMISSIONS_PREFIX = 'designops-dev-submission-';
 
 export function save(data: SavedState): void {
   try {
@@ -66,6 +67,15 @@ export async function submitToMongoDB(
     results,
   };
 
+  if (import.meta.env.DEV) {
+    const documentId = crypto.randomUUID();
+    sessionStorage.setItem(
+      `${DEV_SUBMISSIONS_PREFIX}${documentId}`,
+      JSON.stringify(document),
+    );
+    return documentId;
+  }
+
   const response = await fetch(`${API_BASE}/survey`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'X-API-Key': API_KEY },
@@ -87,6 +97,13 @@ export async function submitToMongoDB(
 }
 
 export async function fetchSubmissionById(id: string): Promise<SurveySubmission> {
+  if (import.meta.env.DEV) {
+    const stored = sessionStorage.getItem(`${DEV_SUBMISSIONS_PREFIX}${id}`);
+    if (stored) {
+      return { _id: id, answers: JSON.parse(stored) as SurveySubmission['answers'] };
+    }
+  }
+
   const response = await fetch(`${API_BASE}/survey/${id}`, {
     headers: { 'X-API-Key': API_KEY },
   });
