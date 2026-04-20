@@ -65,6 +65,7 @@
       "questions": [
         {
           "id": "d_branch",
+          "name": "Branche",
           "text": "In welcher Branche ist Ihre Organisation primär tätig?",
           "type": "select",
           "req": true,
@@ -94,6 +95,7 @@
         },
         {
           "id": "d_size",
+          "name": "Unternehmensgröße",
           "text": "Wie viele Mitarbeitende hat Ihre Organisation?",
           "type": "select",
           "req": true,
@@ -108,6 +110,7 @@
         },
         {
           "id": "d_region",
+          "name": "Region",
           "text": "Region des Hauptsitzes?",
           "type": "select",
           "req": true,
@@ -124,6 +127,7 @@
         },
         {
           "id": "d_bmodel",
+          "name": "Geschäftsmodell",
           "text": "Primäres Geschäftsmodell?",
           "type": "select",
           "req": true,
@@ -140,6 +144,7 @@
       "questions": [
         {
           "id": "r1",
+          "name": "Rolle",
           "text": "In welcher Rolle sind Sie tätig?",
           "type": "select",
           "req": true,
@@ -158,6 +163,7 @@
         },
         {
           "id": "r2",
+          "name": "Berufserfahrung",
           "text": "Berufserfahrung im Bereich Design/UX?",
           "type": "select",
           "req": true,
@@ -171,6 +177,7 @@
         },
         {
           "id": "r3",
+          "name": "Teamgröße",
           "text": "Wie groß ist das Design-Team?",
           "type": "select",
           "req": true,
@@ -185,6 +192,7 @@
         },
         {
           "id": "r4",
+          "name": "DesignOps-Rolle",
           "text": "Gibt es eine dedizierte DesignOps-Rolle?",
           "type": "select",
           "req": true,
@@ -198,6 +206,7 @@
         },
         {
           "id": "r5",
+          "name": "Team-Aufhängung",
           "text": "Organisatorische Aufhängung des Design-Teams?",
           "type": "select",
           "req": true,
@@ -228,13 +237,13 @@
         }
       ],
       "questions": [
-        { "id": "d1_1", "text": "Es gibt klar definierte Rollen und Verantwortlichkeiten im Design-Team.", "type": "likert", "req": true },
-        { "id": "d1_2", "text": "Es existiert ein standardisierter Onboarding-Prozess für Designer:innen.", "type": "likert", "req": true },
-        { "id": "d1_3", "text": "Es gibt definierte Karrierepfade und Kompetenzmodelle (Career Ladder).", "type": "likert", "req": true },
-        { "id": "d1_4", "text": "Regelmäßige Weiterbildungsmöglichkeiten sind vorhanden (Schulungen, Konferenzen, Budget).", "type": "likert", "req": true },
-        { "id": "d1_5", "text": "Es gibt eine aktive Design-Community (CoP, Guild, Meetups).", "type": "likert", "req": true },
-        { "id": "d1_6", "text": "Zufriedenheit und Engagement werden regelmäßig erfasst.", "type": "likert", "req": true },
-        { "id": "d1_t", "text": "Kommentar: Größte Herausforderung People & Team?", "type": "textarea", "req": false }
+        { "id": "d1_1", "name": "Rollenklarheit", "text": "Es gibt klar definierte Rollen und Verantwortlichkeiten im Design-Team.", "type": "likert", "req": true },
+        { "id": "d1_2", "name": "Onboarding", "text": "Es existiert ein standardisierter Onboarding-Prozess für Designer:innen.", "type": "likert", "req": true },
+        { "id": "d1_3", "name": "Karrierepfade", "text": "Es gibt definierte Karrierepfade und Kompetenzmodelle (Career Ladder).", "type": "likert", "req": true },
+        { "id": "d1_4", "name": "Weiterbildung", "text": "Regelmäßige Weiterbildungsmöglichkeiten sind vorhanden (Schulungen, Konferenzen, Budget).", "type": "likert", "req": true },
+        { "id": "d1_5", "name": "Design Community", "text": "Es gibt eine aktive Design-Community (CoP, Guild, Meetups).", "type": "likert", "req": true },
+        { "id": "d1_6", "name": "Engagement-Messung", "text": "Zufriedenheit und Engagement werden regelmäßig erfasst.", "type": "likert", "req": true },
+        { "id": "d1_t", "name": "Kommentar People & Team", "text": "Kommentar: Größte Herausforderung People & Team?", "type": "textarea", "req": false }
       ]
     },
     {
@@ -253,12 +262,12 @@
         }
       ],
       "questions": [
-        { "id": "d2_1", "text": "Design-Prozesse sind dokumentiert und zugänglich.", "type": "likert", "req": true },
-        { "id": "d2_2", "text": "Es gibt einen definierten Handoff-Prozess (Design → Dev).", "type": "likert", "req": true },
-        { "id": "d2_3", "text": "Reviews und Freigaben sind strukturiert und regelmäßig.", "type": "likert", "req": true },
-        { "id": "d2_4", "text": "Es gibt systematische Kapazitäts- und Ressourcenplanung.", "type": "likert", "req": true },
-        { "id": "d2_5", "text": "Design ist in agile Frameworks integriert.", "type": "likert", "req": true },
-        { "id": "d2_6", "text": "Wiederkehrende Aufgaben sind durch Templates/Automatisierungen vereinfacht.", "type": "likert", "req": true }
+        { "id": "d2_1", "name": "Prozess-Dokumentation", "text": "Design-Prozesse sind dokumentiert und zugänglich.", "type": "likert", "req": true },
+        { "id": "d2_2", "name": "Design-Dev Handoff", "text": "Es gibt einen definierten Handoff-Prozess (Design → Dev).", "type": "likert", "req": true },
+        { "id": "d2_3", "name": "Reviews & Freigaben", "text": "Reviews und Freigaben sind strukturiert und regelmäßig.", "type": "likert", "req": true },
+        { "id": "d2_4", "name": "Kapazitätsplanung", "text": "Es gibt systematische Kapazitäts- und Ressourcenplanung.", "type": "likert", "req": true },
+        { "id": "d2_5", "name": "Agile Integration", "text": "Design ist in agile Frameworks integriert.", "type": "likert", "req": true },
+        { "id": "d2_6", "name": "Automatisierung", "text": "Wiederkehrende Aufgaben sind durch Templates/Automatisierungen vereinfacht.", "type": "likert", "req": true }
       ]
     },
     {
@@ -277,13 +286,14 @@
         }
       ],
       "questions": [
-        { "id": "d3_1", "text": "Es gibt einen standardisierten Design-Tool-Stack.", "type": "likert", "req": true },
-        { "id": "d3_2", "text": "Lizenzen werden zentral verwaltet und budgetiert.", "type": "likert", "req": true },
-        { "id": "d3_3", "text": "Es gibt Automatisierungen (Plugins, CI/CD für Design-Assets).", "type": "likert", "req": true },
-        { "id": "d3_4", "text": "Neue Tools werden nach strukturiertem Prozess evaluiert.", "type": "likert", "req": true },
-        { "id": "d3_5", "text": "KI-gestützte Tools werden aktiv eingesetzt.", "type": "likert", "req": true },
+        { "id": "d3_1", "name": "Tool-Stack-Standard", "text": "Es gibt einen standardisierten Design-Tool-Stack.", "type": "likert", "req": true },
+        { "id": "d3_2", "name": "Lizenzverwaltung", "text": "Lizenzen werden zentral verwaltet und budgetiert.", "type": "likert", "req": true },
+        { "id": "d3_3", "name": "Tool-Automatisierung", "text": "Es gibt Automatisierungen (Plugins, CI/CD für Design-Assets).", "type": "likert", "req": true },
+        { "id": "d3_4", "name": "Tool-Evaluation", "text": "Neue Tools werden nach strukturiertem Prozess evaluiert.", "type": "likert", "req": true },
+        { "id": "d3_5", "name": "KI-Tools", "text": "KI-gestützte Tools werden aktiv eingesetzt.", "type": "likert", "req": true },
         {
           "id": "d3_m",
+          "name": "Primäre Tools",
           "text": "Welche Design-Tools werden primär genutzt?",
           "type": "multi",
           "req": false,
@@ -310,12 +320,12 @@
         }
       ],
       "questions": [
-        { "id": "d4_1", "text": "Es existiert ein dokumentiertes, gepflegtes Design System.", "type": "likert", "req": true },
-        { "id": "d4_2", "text": "Es gibt ein Governance-Modell (Verantwortlichkeiten, Contribution).", "type": "likert", "req": true },
-        { "id": "d4_3", "text": "Das Design System wird von >70 % der Teams aktiv genutzt.", "type": "likert", "req": true },
-        { "id": "d4_4", "text": "Design Tokens / Komponenten sind zwischen Tool und Code synchronisiert.", "type": "likert", "req": true },
-        { "id": "d4_5", "text": "Das System deckt Patterns, Guidelines und Content-Standards ab.", "type": "likert", "req": true },
-        { "id": "d4_6", "text": "Qualität und Aktualität werden regelmäßig gemessen.", "type": "likert", "req": true }
+        { "id": "d4_1", "name": "System-Dokumentation", "text": "Es existiert ein dokumentiertes, gepflegtes Design System.", "type": "likert", "req": true },
+        { "id": "d4_2", "name": "Governance-Modell", "text": "Es gibt ein Governance-Modell (Verantwortlichkeiten, Contribution).", "type": "likert", "req": true },
+        { "id": "d4_3", "name": "Adoption", "text": "Das Design System wird von >70 % der Teams aktiv genutzt.", "type": "likert", "req": true },
+        { "id": "d4_4", "name": "Tool-Code-Sync", "text": "Design Tokens / Komponenten sind zwischen Tool und Code synchronisiert.", "type": "likert", "req": true },
+        { "id": "d4_5", "name": "Patterns & Guidelines", "text": "Das System deckt Patterns, Guidelines und Content-Standards ab.", "type": "likert", "req": true },
+        { "id": "d4_6", "name": "Qualitätsmessung", "text": "Qualität und Aktualität werden regelmäßig gemessen.", "type": "likert", "req": true }
       ]
     },
     {
@@ -341,14 +351,14 @@
         }
       ],
       "questions": [
-        { "id": "d5_1", "text": "UX Research wird regelmäßig und systematisch durchgeführt.", "type": "likert", "req": true },
-        { "id": "d5_2", "text": "Es gibt ein zentrales Research-Repository.", "type": "likert", "req": true },
-        { "id": "d5_3", "text": "Research fließt nachweislich in Produktentscheidungen ein.", "type": "likert", "req": true },
-        { "id": "d5_4", "text": "Nicht-Researcher werden zu leichtgewichtiger Research befähigt.", "type": "likert", "req": true },
-        { "id": "d6_1", "text": "Es gibt definierte KPIs/OKRs für den Wertbeitrag von Design.", "type": "likert", "req": true },
-        { "id": "d6_2", "text": "UX-Metriken (SUS, NPS, Task Success) werden regelmäßig erhoben.", "type": "likert", "req": true },
-        { "id": "d6_3", "text": "DesignOps-Metriken (Velocity, Rework Rate) werden gemessen.", "type": "likert", "req": true },
-        { "id": "d6_4", "text": "Der Design-ROI kann nachgewiesen und kommuniziert werden.", "type": "likert", "req": true }
+        { "id": "d5_1", "name": "Research-Systematik", "text": "UX Research wird regelmäßig und systematisch durchgeführt.", "type": "likert", "req": true },
+        { "id": "d5_2", "name": "Research-Repository", "text": "Es gibt ein zentrales Research-Repository.", "type": "likert", "req": true },
+        { "id": "d5_3", "name": "Research-Impact", "text": "Research fließt nachweislich in Produktentscheidungen ein.", "type": "likert", "req": true },
+        { "id": "d5_4", "name": "Research Enablement", "text": "Nicht-Researcher werden zu leichtgewichtiger Research befähigt.", "type": "likert", "req": true },
+        { "id": "d6_1", "name": "Design-KPIs", "text": "Es gibt definierte KPIs/OKRs für den Wertbeitrag von Design.", "type": "likert", "req": true },
+        { "id": "d6_2", "name": "UX-Metriken", "text": "UX-Metriken (SUS, NPS, Task Success) werden regelmäßig erhoben.", "type": "likert", "req": true },
+        { "id": "d6_3", "name": "DesignOps-Metriken", "text": "DesignOps-Metriken (Velocity, Rework Rate) werden gemessen.", "type": "likert", "req": true },
+        { "id": "d6_4", "name": "Design-ROI", "text": "Der Design-ROI kann nachgewiesen und kommuniziert werden.", "type": "likert", "req": true }
       ]
     },
     {
@@ -374,14 +384,14 @@
         }
       ],
       "questions": [
-        { "id": "d7_1", "text": "Designer:innen arbeiten cross-funktional eng mit Product & Engineering.", "type": "likert", "req": true },
-        { "id": "d7_2", "text": "Regelmäßige Design Critiques / Peer Reviews sind ein festes Ritual.", "type": "likert", "req": true },
-        { "id": "d7_3", "text": "Design hat einen \u201eSeat at the Table\u201c bei strategischen Entscheidungen.", "type": "likert", "req": true },
-        { "id": "d7_4", "text": "Design wird als Wertschöpfungsfaktor anerkannt (positive Design-Kultur).", "type": "likert", "req": true },
-        { "id": "d8_1", "text": "Es gibt eine Design-Strategie aligned mit der Unternehmensstrategie.", "type": "likert", "req": true },
-        { "id": "d8_2", "text": "Accessibility (WCAG/BITV/EAA) ist verankert und wird geprüft.", "type": "likert", "req": true },
-        { "id": "d8_3", "text": "Design-Entscheidungen sind nachvollziehbar dokumentiert.", "type": "likert", "req": true },
-        { "id": "d8_4", "text": "Wissen wird aktiv geteilt (Show & Tells, Brownbags, Wikis).", "type": "likert", "req": true }
+        { "id": "d7_1", "name": "Cross-funktionale Arbeit", "text": "Designer:innen arbeiten cross-funktional eng mit Product & Engineering.", "type": "likert", "req": true },
+        { "id": "d7_2", "name": "Design Critiques", "text": "Regelmäßige Design Critiques / Peer Reviews sind ein festes Ritual.", "type": "likert", "req": true },
+        { "id": "d7_3", "name": "Seat at the Table", "text": "Design hat einen \u201eSeat at the Table\u201c bei strategischen Entscheidungen.", "type": "likert", "req": true },
+        { "id": "d7_4", "name": "Design-Kultur", "text": "Design wird als Wertschöpfungsfaktor anerkannt (positive Design-Kultur).", "type": "likert", "req": true },
+        { "id": "d8_1", "name": "Design-Strategie", "text": "Es gibt eine Design-Strategie aligned mit der Unternehmensstrategie.", "type": "likert", "req": true },
+        { "id": "d8_2", "name": "Accessibility", "text": "Accessibility (WCAG/BITV/EAA) ist verankert und wird geprüft.", "type": "likert", "req": true },
+        { "id": "d8_3", "name": "Entscheidungs-Doku", "text": "Design-Entscheidungen sind nachvollziehbar dokumentiert.", "type": "likert", "req": true },
+        { "id": "d8_4", "name": "Wissensteilung", "text": "Wissen wird aktiv geteilt (Show & Tells, Brownbags, Wikis).", "type": "likert", "req": true }
       ]
     },
     {
@@ -394,12 +404,14 @@
       "questions": [
         {
           "id": "cost_block",
+          "name": "Stundensätze",
           "text": "Interne Vollkosten-Stundensätze",
           "type": "cost",
           "req": false
         },
         {
           "id": "c_waste",
+          "name": "Ineffiziente Stunden",
           "text": "Geschätzte ineffiziente Stunden pro Designer:in / Woche?",
           "type": "select",
           "req": false,
@@ -415,6 +427,7 @@
         },
         {
           "id": "c_rework",
+          "name": "Rework-Rate",
           "text": "Geschätzte Rework-Rate?",
           "type": "select",
           "req": false,
@@ -423,6 +436,7 @@
         },
         {
           "id": "f2",
+          "name": "Prioritäten",
           "text": "Welche Dimensionen haben die höchste Priorität für Sie?",
           "type": "multi",
           "req": false,
@@ -440,6 +454,7 @@
         },
         {
           "id": "f3",
+          "name": "Quick Win",
           "text": "Was wäre der eine Quick Win mit dem größten Effekt?",
           "type": "textarea",
           "req": false

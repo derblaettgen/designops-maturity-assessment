@@ -2,6 +2,7 @@ export type QuestionType = 'select' | 'likert' | 'multi' | 'textarea' | 'cost';
 
 interface BaseQuestion {
   id: string;
+  name?: string;
   text: string;
   req: boolean;
   hint?: string;

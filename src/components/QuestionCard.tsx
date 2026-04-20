@@ -50,11 +50,12 @@ export function QuestionCard({ question }: QuestionCardProps) {
   return (
     <div className={className} ref={cardRef}>
       <div className="question-card__check">✓</div>
-      <div className="question-card__id">
-        {question.id.toUpperCase()}
-        {question.req && <span className="question-card__required"> *</span>}
+      <div className="question-card__text">
+        {question.text}
+        {question.req && (
+          <span className="question-card__required" aria-label="Pflichtfeld"> *</span>
+        )}
       </div>
-      <div className="question-card__text">{question.text}</div>
       {question.hint && <div className="question-card__hint">{question.hint}</div>}
       {renderInput(question)}
     </div>
