@@ -13,3 +13,4 @@ vite.config.js
 
 .env
 .claude/
+CLAUDE.local.md
