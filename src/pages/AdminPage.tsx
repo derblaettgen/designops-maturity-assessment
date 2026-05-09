@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { fetchAdminStats, type AdminStats } from '../lib/adminApi';
 import './AdminPage.css';
 
 interface AdminFilters {
@@ -24,12 +25,39 @@ export function AdminPage() {
   };
 
   const [statsState, setStatsState] = useState<'loading' | 'error' | 'ready'>('loading');
+  const [statsData, setStatsData] = useState<AdminStats | null>(null);
+  const [statsError, setStatsError] = useState<string | null>(null);
+
   const [listState, setListState] = useState<'loading' | 'error' | 'ready'>('loading');
 
+  const loadStats = useCallback(() => {
+    let cancelled = false;
+    setStatsState('loading');
+    setStatsError(null);
+    fetchAdminStats()
+      .then(data => {
+        if (!cancelled) {
+          setStatsData(data);
+          setStatsState('ready');
+        }
+      })
+      .catch(err => {
+        if (!cancelled) {
+          setStatsError(err.message);
+          setStatsState('error');
+        }
+      });
+    return () => { cancelled = true; };
+  }, []);
+
   useEffect(() => {
-    // Simulate network latency
+    const cancel = loadStats();
+    return cancel;
+  }, [loadStats]);
+
+  useEffect(() => {
+    // Simulate network latency for list data
     const timer = setTimeout(() => {
-      setStatsState('ready');
       setListState('ready');
     }, 500);
     return () => clearTimeout(timer);
@@ -46,29 +74,35 @@ export function AdminPage() {
           <div className="admin-loading">Loading stats...</div>
         ) : statsState === 'error' ? (
           <div className="admin-error-banner">
-            <span>Failed to load stats.</span>
-            <button className="btn" onClick={() => setStatsState('loading')}>Retry</button>
+            <span>{statsError || 'Failed to load stats.'}</span>
+            <button className="btn" onClick={loadStats}>Retry</button>
           </div>
-        ) : (
+        ) : statsData ? (
           <div className="admin-stats-strip">
             <div className="admin-stat-card">
               <span className="admin-stat-label">Einsendungen</span>
-              <span className="admin-stat-value">142</span>
+              <span className="admin-stat-value">{statsData.total}</span>
             </div>
             <div className="admin-stat-card">
               <span className="admin-stat-label">Ø Score</span>
-              <span className="admin-stat-value">3.1</span>
+              <span className="admin-stat-value">
+                {statsData.total > 0 ? statsData.avgScore.toFixed(1) : '-'}
+              </span>
             </div>
             <div className="admin-stat-card">
-              <span className="admin-stat-label">Ø Waste</span>
-              <span className="admin-stat-value">12%</span>
+              <span className="admin-stat-label">Min Score</span>
+              <span className="admin-stat-value">
+                {statsData.total > 0 ? statsData.minScore.toFixed(1) : '-'}
+              </span>
             </div>
             <div className="admin-stat-card">
-              <span className="admin-stat-label">Top Branch</span>
-              <span className="admin-stat-value">Mobility</span>
+              <span className="admin-stat-label">Max Score</span>
+              <span className="admin-stat-value">
+                {statsData.total > 0 ? statsData.maxScore.toFixed(1) : '-'}
+              </span>
             </div>
           </div>
-        )}
+        ) : null}
 
         <div className="admin-filter-bar">
           <input type="date" className="admin-filter-input" placeholder="Date From" value={filters.dateFrom} readOnly />
