@@ -1,43 +1,46 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { fetchAdminStats, type AdminStats } from '../lib/adminApi';
+import {
+  fetchAdminStats,
+  fetchAdminSubmissions,
+  resolveWorstDimension,
+  type AdminStats,
+  type AdminSubmissionsParams,
+  type AdminSubmissionsResponse
+} from '../lib/adminApi';
 import './AdminPage.css';
 
-interface AdminFilters {
-  dateFrom: string;
-  dateTo: string;
-  scoreMin: string;
-  scoreMax: string;
-  branch: string;
-  page: number;
-}
-
 export function AdminPage() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   
-  const filters: AdminFilters = {
-    dateFrom: searchParams.get('dateFrom') || '',
-    dateTo: searchParams.get('dateTo') || '',
-    scoreMin: searchParams.get('scoreMin') || '',
-    scoreMax: searchParams.get('scoreMax') || '',
-    branch: searchParams.get('branch') || '',
-    page: parseInt(searchParams.get('page') || '1', 10),
-  };
+  const filters: AdminSubmissionsParams = useMemo(() => {
+    const p = Object.fromEntries(searchParams);
+    return {
+      page: p.page ?? '1',
+      dateFrom: p.dateFrom ?? '',
+      dateTo: p.dateTo ?? '',
+      scoreMin: p.scoreMin ?? '',
+      scoreMax: p.scoreMax ?? '',
+      branch: p.branch ?? '',
+    };
+  }, [searchParams]);
 
   const [statsState, setStatsState] = useState<'loading' | 'error' | 'ready'>('loading');
   const [statsData, setStatsData] = useState<AdminStats | null>(null);
   const [statsError, setStatsError] = useState<string | null>(null);
 
-  const [listState, setListState] = useState<'loading' | 'error' | 'ready'>('loading');
+  const [dataState, setDataState] = useState<'loading' | 'error' | 'ready'>('loading');
+  const [dataError, setDataError] = useState<string | null>(null);
+  const [data, setData] = useState<AdminSubmissionsResponse | null>(null);
 
   const loadStats = useCallback(() => {
     let cancelled = false;
     setStatsState('loading');
     setStatsError(null);
     fetchAdminStats()
-      .then(data => {
+      .then(d => {
         if (!cancelled) {
-          setStatsData(data);
+          setStatsData(d);
           setStatsState('ready');
         }
       })
@@ -56,12 +59,39 @@ export function AdminPage() {
   }, [loadStats]);
 
   useEffect(() => {
-    // Simulate network latency for list data
-    const timer = setTimeout(() => {
-      setListState('ready');
-    }, 500);
-    return () => clearTimeout(timer);
-  }, []); // Only run once for the stub
+    let cancelled = false;
+    setDataState('loading');
+    setDataError(null);
+    fetchAdminSubmissions(filters)
+      .then(d => {
+        if (!cancelled) {
+          setData(d);
+          setDataState('ready');
+        }
+      })
+      .catch(err => {
+        if (!cancelled) {
+          setDataError(err.message);
+          setDataState('error');
+        }
+      });
+    return () => { cancelled = true; };
+  }, [filters]);
+
+  const handleFilterChange = (key: keyof AdminSubmissionsParams, value: string) => {
+    setSearchParams(prev => {
+      const next = new URLSearchParams(prev);
+      if (value) {
+        next.set(key, value);
+      } else {
+        next.delete(key);
+      }
+      if (key !== 'page') {
+        next.set('page', '1');
+      }
+      return next;
+    });
+  };
 
   return (
     <div className="admin-page">
@@ -105,57 +135,103 @@ export function AdminPage() {
         ) : null}
 
         <div className="admin-filter-bar">
-          <input type="date" className="admin-filter-input" placeholder="Date From" value={filters.dateFrom} readOnly />
-          <input type="date" className="admin-filter-input" placeholder="Date To" value={filters.dateTo} readOnly />
-          <input type="number" className="admin-filter-input" placeholder="Min Score" value={filters.scoreMin} readOnly />
-          <input type="number" className="admin-filter-input" placeholder="Max Score" value={filters.scoreMax} readOnly />
-          <select className="admin-filter-input" value={filters.branch} onChange={() => {}}>
-            <option value="">All Branches</option>
-            <option value="Automobil / Mobility">Automobil / Mobility</option>
-            <option value="Banken / Finanzdienstleistungen">Banken / Finanzdienstleistungen</option>
-            <option value="Sonstige">Sonstige</option>
+          <input 
+            type="date" 
+            className="admin-filter-input" 
+            placeholder="Date From" 
+            value={filters.dateFrom} 
+            onChange={(e) => handleFilterChange('dateFrom', e.target.value)} 
+          />
+          <input 
+            type="date" 
+            className="admin-filter-input" 
+            placeholder="Date To" 
+            value={filters.dateTo} 
+            onChange={(e) => handleFilterChange('dateTo', e.target.value)} 
+          />
+          <input 
+            type="number" 
+            className="admin-filter-input" 
+            placeholder="Min Score" 
+            value={filters.scoreMin} 
+            onChange={(e) => handleFilterChange('scoreMin', e.target.value)} 
+          />
+          <input 
+            type="number" 
+            className="admin-filter-input" 
+            placeholder="Max Score" 
+            value={filters.scoreMax} 
+            onChange={(e) => handleFilterChange('scoreMax', e.target.value)} 
+          />
+          <select 
+            className="admin-filter-input" 
+            value={filters.branch} 
+            onChange={(e) => handleFilterChange('branch', e.target.value)}
+          >
+            <option value="">Alle Branchen</option>
+            {statsData?.branches.map(branch => (
+              <option key={branch} value={branch}>{branch}</option>
+            ))}
           </select>
         </div>
 
-        {listState === 'loading' ? (
+        {dataState === 'loading' ? (
           <div className="admin-loading">Loading data...</div>
-        ) : listState === 'error' ? (
+        ) : dataState === 'error' ? (
           <div className="admin-error-banner">
-            <span>Failed to load data.</span>
-            <button className="btn" onClick={() => setListState('loading')}>Retry</button>
+            <span>{dataError || 'Failed to load data.'}</span>
+            <button className="btn" onClick={() => handleFilterChange('page', filters.page || '1')}>Retry</button>
           </div>
-        ) : (
-          <div className="admin-table-container">
-            <table className="admin-table">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Date</th>
-                  <th>Branch</th>
-                  <th>Score</th>
-                  <th>Waste</th>
-                </tr>
-              </thead>
-              <tbody>
-                {[...Array(6)].map((_, i) => (
-                  <tr key={i}>
-                    <td>SUB-{1000 + i}</td>
-                    <td>2024-03-{10 + i}</td>
-                    <td>{["Automobil / Mobility", "Banken / Finanzdienstleistungen", "Sonstige"][i % 3]}</td>
-                    <td>{(2.5 + (i * 0.2)).toFixed(1)}</td>
-                    <td>{10 + i}%</td>
+        ) : data ? (
+          <>
+            <div className="admin-table-container">
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>Eingereicht</th>
+                    <th>Branch</th>
+                    <th>Größe</th>
+                    <th style={{ textAlign: 'right' }}>Score</th>
+                    <th>Reifegrad</th>
+                    <th>Schwächste Dimension</th>
+                    <th></th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+                </thead>
+                <tbody>
+                  {data.data.map(sub => (
+                    <tr 
+                      key={sub._id} 
+                      onClick={() => window.open(`/survey/result/${sub._id}`, '_blank')}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      <td>{new Date(sub.answers.meta.submittedAt).toLocaleDateString('de-DE')}</td>
+                      <td><div className="truncate" style={{ maxWidth: '200px', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>{sub.answers.rawAnswers.d_branch as string}</div></td>
+                      <td><div className="truncate" style={{ maxWidth: '200px', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>{sub.answers.rawAnswers.d_size as string}</div></td>
+                      <td style={{ textAlign: 'right' }}>{sub.answers.results.overallScore.toFixed(1)}</td>
+                      <td>{sub.answers.results.maturityLabel}</td>
+                      <td>{resolveWorstDimension(sub)}</td>
+                      <td><a href={`/survey/result/${sub._id}`} target="_blank" rel="noreferrer" aria-label="Ergebnis öffnen" style={{ color: 'var(--color-accent)' }} onClick={e => e.stopPropagation()}>→</a></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
 
-        <div className="admin-pagination">
-          <button className="btn btn-ghost" disabled>← Prev</button>
-          <span className="admin-pagination-info">Page 1 of 5</span>
-          <button className="btn btn-ghost" disabled>Next →</button>
-        </div>
+            <div className="admin-pagination">
+              <button 
+                className="btn btn-ghost" 
+                disabled={data.page === 1}
+                onClick={() => handleFilterChange('page', String(data.page - 1))}
+              >← Prev</button>
+              <span className="admin-pagination-info">Page {data.page} of {data.pages}</span>
+              <button 
+                className="btn btn-ghost" 
+                disabled={data.page >= data.pages}
+                onClick={() => handleFilterChange('page', String(data.page + 1))}
+              >Next →</button>
+            </div>
+          </>
+        ) : null}
       </main>
     </div>
   );
