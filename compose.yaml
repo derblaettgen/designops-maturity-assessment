@@ -1,0 +1,54 @@
+name: designops
+
+# The host's Nginx stays the only public entry point (TLS, domains). It proxies
+# /survey/ to `web` and /api/v1 to `api`. Published ports bind to loopback only,
+# because Docker-published ports bypass ufw.
+#
+# RELEASE tags the built images (the deploy script passes the Git SHA) so the
+# previous release stays available for rollback.
+services:
+  web:
+    build: .
+    image: designops-web:${RELEASE:-local}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8080/survey/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    ports:
+      - "127.0.0.1:${WEB_PORT:-3103}:8080"
+
+  api:
+    build: ./server
+    image: designops-api:${RELEASE:-local}
+    restart: unless-stopped
+    environment:
+      MONGODB_URI: mongodb://${MONGO_USER:?set MONGO_USER in .env}:${MONGO_PASSWORD:?set MONGO_PASSWORD in .env}@mongo:27017/survey?authSource=admin
+      API_KEY: ${API_KEY:?set API_KEY in .env}
+    ports:
+      - "127.0.0.1:${API_PORT:-3102}:3101"
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+  mongo:
+    image: mongo:8.0
+    restart: unless-stopped
+    # Not published on the host: only `api` reaches it over the project network.
+    command: ["--wiredTigerCacheSizeGB", "0.25"]
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+volumes:
+  mongo-data:
