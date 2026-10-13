@@ -3,17 +3,43 @@ name: Deploy to VPS
 on:
   push:
     branches: [main]
+  pull_request:
 
 concurrency:
-  group: production-deploy
+  group: ${{ github.event_name == 'push' && 'production-deploy' || format('test-{0}', github.ref) }}
   cancel-in-progress: false
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            server/package-lock.json
+      - name: Test and build frontend
+        run: |
+          npm ci --no-audit --no-fund
+          npm test -- --run
+          npm run build
+      - name: Test API
+        working-directory: server
+        run: |
+          npm ci --no-audit --no-fund
+          npm test
+
   deploy:
+    if: github.event_name == 'push'
+    needs: test
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - name: Deploy versioned systemd release
+      - name: Deploy container release
         uses: appleboy/ssh-action@v1
         env:
           DEPLOY_SHA: ${{ github.sha }}
